@@ -1,6 +1,11 @@
 (ns hyperspace)
 
+(load "geometry")
+(load "world")
 (load "gravity")
-(load "gui")
+(load "world")
+(load "game")
+(load "ui")
 
-(start-gui)
+(let [world (generate-world)]
+  (start-ui world))

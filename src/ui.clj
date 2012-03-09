@@ -1,9 +1,10 @@
 (import '(javax.swing JFrame JLabel))
 
-(defn start-gui
-  "Starts GUI."
-  []
-  (let [label (JLabel. "Hyperspace")
+(defn start-ui
+  "Starts UI."
+  [world]
+  (let [text (str world)
+        label (JLabel. text)
         frame (JFrame. "Hyperspace")]
     (doto frame
       (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
