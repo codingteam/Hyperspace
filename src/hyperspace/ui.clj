@@ -1,5 +1,9 @@
-(import '(org.lwjgl Sys))
-(import '(org.lwjgl.opengl Display DisplayMode GL11))
+(ns hyperspace.ui
+  (:use (hyperspace game
+                    geometry))
+  (:import (org.lwjgl Sys)
+           (org.lwjgl.opengl Display DisplayMode GL11)
+           (hyperspace.geometry point2)))
 
 (declare start-ui)
 (declare setup-display)
