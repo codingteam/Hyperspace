@@ -58,7 +58,7 @@
   (/ y window-height))
 
 (defn space-point-to-display [point]
-  (point-record.
+  (point2.
     (- (* 2 (normalize-x (* (:x point) scale))) 1)
     (- (* 2 (normalize-y (* (:y point) scale))) 1)))
 

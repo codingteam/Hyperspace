@@ -1,12 +1,12 @@
-(defrecord planet-record [center mass radius])
-(defrecord player-record [center heading])
-(defrecord bullet-record [center heading velocity])
+(defrecord planet [center mass radius])
+(defrecord player [center heading])
+(defrecord bullet [center velocity])
 
-(defrecord world-record [planets players bullets])
+(defrecord world [planets players bullets])
 
 (defn generate-world
   []
   ; TODO: Randomize world generation.
-  (let [planet (planet-record. (point 0 0) 1 10)
-        player (player-record. (point 1 1) 0)]
-    (world-record. [planet] [player] [])))
+  (let [planet (planet. (point2. 0 0) 1 10)
+        player (player. (point2. 1 1) 0)]
+    (world. [planet] [player] [])))

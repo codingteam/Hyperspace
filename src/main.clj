@@ -3,7 +3,6 @@
 (load "geometry")
 (load "world")
 (load "gravity")
-(load "world")
 (load "game")
 (load "ui")
 
