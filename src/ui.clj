@@ -1,13 +1,9 @@
-(import '(javax.swing JFrame JLabel))
+(import '(org.lwjgl.opengl Display DisplayMode))
 
 (defn start-ui
   "Starts UI."
   [world]
-  (let [text (str world)
-        label (JLabel. text)
-        frame (JFrame. "Hyperspace")]
-    (doto frame
-      (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
-      (.add label)
-      (.pack)
-      (.setVisible true))))
+  (Display/setDisplayMode (DisplayMode. 800 600))
+  (Display/create)
+  (while (not (Display/isCloseRequested))
+    (Display/update)))

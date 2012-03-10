@@ -1,8 +1,6 @@
 <component name="libraryTable">
-  <library name="clojure-1.3.0">
+  <library name="lwjgl">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/clojure.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lwjgl.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/lwjgl_util.jar!/" />
     </CLASSES>
     <JAVADOC />
