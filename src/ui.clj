@@ -1,8 +1,9 @@
-(import '(org.lwjgl.opengl Display DisplayMode))
-(import '(org.lwjgl.opengl GL11))
+(import '(org.lwjgl Sys))
+(import '(org.lwjgl.opengl Display DisplayMode GL11))
 
 (declare start-ui)
 (declare setup-display)
+(declare get-time)
 (declare ui-loop)
 (declare clear-display)
 (declare render-planets)
@@ -14,7 +15,9 @@
 
 (def window-width 800)
 (def window-height 600)
+(def fps 60)
 (def scale 1) ; pixels per light year
+(def time-scale 10) ; rounds per second
 
 (defn start-ui
   "Starts UI."
@@ -28,13 +31,25 @@
   (GL11/glClearColor 0 0 0 0)
   (GL11/glViewport 0 0 window-width window-height))
 
-(defn ui-loop [world]
-  (while (not (Display/isCloseRequested))
+(defn get-time
+  []
+  (/ (Sys/getTime) (Sys/getTimerResolution)))
+
+(defn ui-loop [init-world]
+  (loop [time (get-time)
+         world init-world]
     (clear-display)
     (render-planets world)
     (render-players world)
     (render-bullets world)
-    (Display/update)))
+    (if (Display/isCloseRequested)
+      ()
+      (let [new-time (get-time)
+            time-delta (- new-time time)
+            new-world (update-world world (* time-delta time-scale))]
+        (Display/sync fps)
+        (Display/update)
+        (recur new-time new-world)))))
 
 (defn clear-display []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
