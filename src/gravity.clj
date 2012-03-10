@@ -10,11 +10,11 @@
   [bullet planets]
   (let [planet-center (:center planet)
         bullet-center (:center bullet)
-         force (reduce #(+ %1 (gravity-force
-                                bullet-mass (:mass %2)
-                                (point-distance planet-center bullet-center))
-                        0
-                        planets))]
+        force (reduce #(+ %1 (gravity-force
+                               bullet-mass (:mass %2)
+                               (point-distance planet-center bullet-center)))
+                      0
+                      planets)]
     (/ force bullet-mass)))
 
 (defn gravity-force
