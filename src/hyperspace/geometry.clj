@@ -1,3 +1,5 @@
+(ns hyperspace.geometry)
+
 (defrecord point2 [x y])
 (defrecord vector2 [x y])
 
