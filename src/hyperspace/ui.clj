@@ -1,9 +1,12 @@
 (ns hyperspace.ui
   (:use (hyperspace game
-                    geometry))
+                    geometry
+                    world))
   (:import (org.lwjgl Sys)
+           (org.lwjgl.input Keyboard)
            (org.lwjgl.opengl Display DisplayMode GL11)
-           (hyperspace.geometry point2)))
+           (hyperspace.geometry point2 vector2)
+           (hyperspace.world bullet world)))
 
 (declare start-ui)
 (declare setup-display)
@@ -13,6 +16,7 @@
 (declare render-planets)
 (declare render-players)
 (declare render-bullets)
+(declare process-input)
 (declare render-planet)
 (declare render-player)
 (declare render-bullet)
@@ -46,14 +50,15 @@
     (render-planets world)
     (render-players world)
     (render-bullets world)
-    (if (Display/isCloseRequested)
-      ()
-      (let [new-time (get-time)
-            time-delta (- new-time time)
-            new-world (update-world world (* time-delta time-scale))]
-        (Display/sync fps)
-        (Display/update)
-        (recur new-time new-world)))))
+    (let [world (process-input world)]
+      (if (Display/isCloseRequested)
+        ()
+        (let [new-time (get-time)
+              time-delta (- new-time time)
+              new-world (update-world world (* time-delta time-scale))]
+          (Display/sync fps)
+          (Display/update)
+          (recur new-time new-world))))))
 
 (defn clear-display []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
@@ -69,6 +74,16 @@
 (defn render-bullets [world]
   (doseq [bullet (:bullets world)]
     (render-bullet bullet)))
+
+(defn process-input [world]
+  (if (Keyboard/next)
+    (let [planets (:planets world)
+          players (:players world)
+          bullets (conj (:bullets world)
+                        (bullet. (:center (first players)) (vector2. 1 1)))
+          new-world (world. planets players bullets)]
+      new-world)
+    world))
 
 (defn normalize-x [x]
   (/ x window-width))
@@ -115,8 +130,8 @@
   (let [center (space-point-to-display (:center bullet))
         center-x (:x center)
         center-y (:y center)
-        x1 (- (normalize-x 1) center-x)
-        y1 (- (normalize-y 1) center-y)
-        x2 (+ (normalize-x 1) center-x)
-        y2 (+ (normalize-y 1) center-y)]
+        x1 (- center-x (normalize-x 1))
+        y1 (- center-y (normalize-y 1))
+        x2 (+ center-x (normalize-x 1))
+        y2 (+ center-y (normalize-y 1))]
     (GL11/glRectf x1 y1 x2 y2)))
