@@ -1,5 +1,6 @@
 (ns hyperspace.world
-  (:use (hyperspace geometry))
+  (:use (hyperspace geometry
+                    misc))
   (:import (hyperspace.geometry point2)))
 
 (defrecord planet [center mass radius])
@@ -17,10 +18,12 @@
 (def max-planet-size 100)
 
 (defn random-point []
-  (point2. (+ (rand-int (- max-x min-x)) min-x) (+ (rand-int (- max-y min-y)) min-y)))  
+  (point2. (rand-range min-x max-x)
+           (rand-range min-y max-y)))
 
 (defn random-planet []
-  (let [size (+ min-planet-size (rand-int (- max-planet-size min-planet-size)))]
+  (let [size (rand-range min-planet-size
+                         max-planet-size)]
     (planet. (random-point) size size))) ;;TODO make planet mass something like sqrt(radius)*10^20
 
 (defn generate-planets [n]
@@ -31,5 +34,5 @@
 ;;TODO Place players in different parts of a world.  
 (defn generate-world
   []
-  (let [planet-quatinty (+ (rand-int 4) 2)] ;; 2 to 5 planets should be fine
+  (let [planet-quatinty (rand-range 2 5)] ;; 2 to 5 planets should be fine
     (world. (generate-planets planet-quatinty) [(player. (random-point) 0) (player. (random-point) 0)] [])))
