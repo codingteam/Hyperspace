@@ -20,7 +20,7 @@
 (def window-width 800)
 (def window-height 600)
 (def fps 60)
-(def scale 1) ; pixels per light year
+(def scale 1) ; pixels per kilometer
 (def time-scale 10) ; rounds per second
 
 (defn start-ui
