@@ -3,6 +3,12 @@
 (defrecord point2 [x y])
 (defrecord vector2 [x y])
 
+(defn make-vector-radial
+  [length angle]
+  (let [x (* length (Math/cos angle))
+        y (* length (Math/sin angle))]
+    (vector2. x y)))
+
 (defn point-move
   [point vector]
   (let [new-x (+ (:x point) (:x vector))
@@ -23,3 +29,11 @@
   (let [new-x (+ (:x v1) (:x v2))
         new-y (+ (:y v1) (:y v2))]
     (vector2. new-x new-y)))
+
+(defn bearing-to
+  [p1 p2]
+  (let [x1 (:x p1)
+        x2 (:x p2)
+        y1 (:y p1)
+        y2 (:y p2)]
+    (Math/atan2 (- y2 y1) (- x2 x1))))
