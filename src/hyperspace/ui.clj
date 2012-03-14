@@ -30,8 +30,8 @@
   (ui-loop world))
 
 (defn setup-display []
-  (Display/create)
   (Display/setDisplayMode (DisplayMode. window-width window-height))
+  (Display/create)
   (GL11/glClearColor 0 0 0 0)
   (GL11/glViewport 0 0 window-width window-height))
 
@@ -47,7 +47,7 @@
     (render-players world)
     (render-bullets world)
     (if (Display/isCloseRequested)
-      ()
+      (Display/destroy)
       (let [new-time (get-time)
             time-delta (- new-time time)
             new-world (update-world world (* time-delta time-scale))]
