@@ -121,7 +121,7 @@
         x1 (- center-x (normalize-x 2))
         y1 (- center-y (normalize-y 2))
         x2 (+ center-x (normalize-x 2))
-        y2 (+ center-y (normalize-x 2))]
+        y2 (+ center-y (normalize-y 2))]
     (GL11/glRectf x1 y1 x2 y2)))
 
 (defn render-bullet [bullet]
