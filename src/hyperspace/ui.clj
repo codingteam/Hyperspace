@@ -13,10 +13,12 @@
 (declare get-time)
 (declare ui-loop)
 (declare clear-display)
+(declare render-traces)
 (declare render-planets)
 (declare render-players)
 (declare render-bullets)
 (declare process-input)
+(declare render-trace)
 (declare render-planet)
 (declare render-player)
 (declare render-bullet)
@@ -47,6 +49,7 @@
   (loop [time (get-time)
          world init-world]
     (clear-display)
+    (render-traces world)
     (render-planets world)
     (render-players world)
     (render-bullets world)
@@ -62,6 +65,10 @@
 
 (defn clear-display []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
+
+(defn render-traces [world]
+  (doseq [trace (:traces world)]
+    (render-trace trace)))
 
 (defn render-planets [world]
   (doseq [planet (:planets world)]
@@ -81,7 +88,8 @@
           players (:players world)
           bullets (conj (:bullets world)
                         (bullet. (:center (first players)) (vector2. 1 1)))
-          new-world (world. planets players bullets)]
+          traces (:traces world)
+          new-world (world. planets players bullets traces)]
       new-world)
     world))
 
@@ -95,6 +103,19 @@
   (point2.
     (- (* 2 (normalize-x (* (:x point) scale))) 1)
     (- (* 2 (normalize-y (* (:y point) scale))) 1)))
+
+(defn render-trace
+  "Suddenly, a trace renders as a yellow point."
+  [trace]
+  (GL11/glColor3f 1 1 0)
+  (let [center (space-point-to-display (:center trace))
+        center-x (:x center)
+        center-y (:y center)
+        x1 (- center-x (normalize-x 1))
+        y1 (- center-y (normalize-y 1))
+        x2 (+ center-x (normalize-x 1))
+        y2 (+ center-y (normalize-y 1))]
+    (GL11/glRectf x1 y1 x2 y2)))
 
 (defn render-planet
   "A planet now renders as green rectangle."

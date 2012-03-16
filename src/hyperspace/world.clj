@@ -6,8 +6,9 @@
 (defrecord planet [center mass radius])
 (defrecord player [center heading])
 (defrecord bullet [center velocity])
+(defrecord trace [center])
 
-(defrecord world [planets players bullets])
+(defrecord world [planets players bullets traces])
 
 (def min-x 100)
 (def max-x 700)
@@ -35,4 +36,6 @@
 (defn generate-world
   []
   (let [planet-quatinty (rand-range 2 5)] ;; 2 to 5 planets should be fine
-    (world. (generate-planets planet-quatinty) [(player. (random-point) 0) (player. (random-point) 0)] [])))
+    (world. (generate-planets planet-quatinty)
+            [(player. (random-point) 0) (player. (random-point) 0)]
+            [] [])))

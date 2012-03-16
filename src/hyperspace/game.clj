@@ -3,7 +3,10 @@
                     geometry
                     world))
   (:import (hyperspace.world bullet
+                             trace
                              world)))
+
+(def max-traces 1000)
 
 (defn move-bullet
   [bullet planets]
@@ -30,10 +33,15 @@
     (if (<= time 0)
       world
       (let [planets (:planets world)
-            bullets (map #(move-bullet % planets)
+            bullets (:bullets world)
+            traces (:traces world)
+            new-planets planets
+            new-players (:players world)
+            new-bullets (map #(move-bullet % planets)
                          (filter #(not (destroy-bullet? % planets))
-                                 (:bullets world)))
-            players (:players world)
-            new-world (world. planets players bullets)
+                                 bullets))
+            new-traces (concat (map #(trace. (:center %)) bullets)
+                               (take max-traces traces))
+            new-world (world. new-planets new-players new-bullets new-traces)
             new-time (- time 1)]
         (recur new-time new-world)))))
