@@ -20,6 +20,7 @@
 (declare render-planet)
 (declare render-player)
 (declare render-bullet)
+(declare draw-ellipse)
 
 (def window-width 800)
 (def window-height 600)
@@ -97,20 +98,14 @@
     (- (* 2 (normalize-y (* (:y point) scale))) 1)))
 
 (defn render-planet
-  "A planet now renders as green rectangle."
+  "A planet now renders as green rectangle^Wcircle."
   [planet]
   (GL11/glColor3f 0 1 0)
   (let [center (space-point-to-display (:center planet))
-        center-x (:x center)
-        center-y (:y center)
         radius-px (* (:radius planet) scale)
         delta-x (normalize-x radius-px)
-        delta-y (normalize-y radius-px)
-        x1 (- center-x delta-x)
-        y1 (- center-y delta-y)
-        x2 (+ center-x delta-x)
-        y2 (+ center-y delta-y)]
-    (GL11/glRectf x1 y1 x2 y2)))
+        delta-y (normalize-y radius-px)]
+    (draw-ellipse center delta-x delta-y)))
 
 (defn render-player [player]
   "A player now renders as a, well, blue rectangle."
@@ -135,3 +130,18 @@
         x2 (+ center-x (normalize-x 1))
         y2 (+ center-y (normalize-y 1))]
     (GL11/glRectf x1 y1 x2 y2)))
+
+(defn draw-ellipse [center radius-x radius-y]
+  (let [x (:x center)
+        y (:y center)
+        n 200
+        delta-angle (/ (* 2 Math/PI) n)
+        angles      (take n (iterate (partial + delta-angle) 0.0))]
+    (GL11/glPushMatrix)
+    (GL11/glTranslatef x y 0.0)
+    (GL11/glBegin GL11/GL_POLYGON)
+    (doseq [angle angles]
+      (GL11/glVertex2f (* radius-x (Math/cos angle))
+                       (* radius-y (Math/sin angle))))
+    (GL11/glEnd)
+    (GL11/glPopMatrix)))
