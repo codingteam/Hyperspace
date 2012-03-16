@@ -14,6 +14,14 @@
         new-velocity (vector-sum velocity acceleration)]
     (bullet. new-position new-velocity)))
 
+(defn destroy-bullet?
+  [bullet planets]
+  (let [bullet-center (:center bullet)]
+    (some #(<= (point-distance bullet-center
+                               (:center %))
+               (:radius %))
+          planets)))
+
 (defn update-world
   "Simulates few steps for world."
   [init-world time-delta]
@@ -22,7 +30,9 @@
     (if (<= time 0)
       world
       (let [planets (:planets world)
-            bullets (map #(move-bullet % planets) (:bullets world))
+            bullets (map #(move-bullet % planets)
+                         (filter #(not (destroy-bullet? % planets))
+                                 (:bullets world)))
             players (:players world)
             new-world (world. planets players bullets)
             new-time (- time 1)]
