@@ -66,31 +66,28 @@
 (defn clear-display []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
 
-(defn render-traces [world]
-  (doseq [trace (:traces world)]
+(defn render-traces [{traces :traces}]
+  (doseq [trace traces]
     (render-trace trace)))
 
-(defn render-planets [world]
-  (doseq [planet (:planets world)]
+(defn render-planets [{planets :planets}]
+  (doseq [planet planets]
     (render-planet planet)))
 
-(defn render-players [world]
-  (doseq [player (:players world)]
+(defn render-players [{players :players}]
+  (doseq [player players]
     (render-player player)))
 
-(defn render-bullets [world]
-  (doseq [bullet (:bullets world)]
+(defn render-bullets [{bullets :bullets}]
+  (doseq [bullet bullets]
     (render-bullet bullet)))
 
 (defn process-input [world]
   (if (Keyboard/next)
-    (let [planets (:planets world)
-          players (:players world)
-          bullets (conj (:bullets world)
-                        (bullet. (:center (first players)) (vector2. 1 1)))
-          traces (:traces world)
-          new-world (world. planets players bullets traces)]
-      new-world)
+    (let [{[{player-center :center} & _] :players
+           bullets                       :bullets} world]
+      (assoc world
+        :bullets (conj bullets (bullet. player-center (vector2. 1 1)))))
     world))
 
 (defn normalize-x [x]
@@ -99,18 +96,17 @@
 (defn normalize-y [y]
   (/ y window-height))
 
-(defn space-point-to-display [point]
-  (point2.
-    (- (* 2 (normalize-x (* (:x point) scale))) 1)
-    (- (* 2 (normalize-y (* (:y point) scale))) 1)))
+(defn space-point-to-display [{x :x y :y :as point}]
+  (assoc point
+    :x (- (* 2 (normalize-x (* x scale))) 1)
+    :y (- (* 2 (normalize-y (* y scale))) 1)))
 
 (defn render-trace
   "Suddenly, a trace renders as a yellow point."
   [trace]
   (GL11/glColor3f 1 1 0)
   (let [center (space-point-to-display (:center trace))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 1))
         y1 (- center-y (normalize-y 1))
         x2 (+ center-x (normalize-x 1))
@@ -122,8 +118,7 @@
   [planet]
   (GL11/glColor3f 0 1 0)
   (let [center (space-point-to-display (:center planet))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         radius-px (* (:radius planet) scale)
         delta-x (normalize-x radius-px)
         delta-y (normalize-y radius-px)
@@ -137,8 +132,7 @@
   "A player now renders as a, well, blue rectangle."
   (GL11/glColor3f 0 0 1)
   (let [center (space-point-to-display (:center player))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 2))
         y1 (- center-y (normalize-y 2))
         x2 (+ center-x (normalize-x 2))
@@ -149,8 +143,7 @@
   "A bullet now renders as a... guess what? Right, red rectangle!"
   (GL11/glColor3f 1 0 0)
   (let [center (space-point-to-display (:center bullet))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 1))
         y1 (- center-y (normalize-y 1))
         x2 (+ center-x (normalize-x 1))
