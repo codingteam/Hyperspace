@@ -5,23 +5,16 @@
   (:import (org.lwjgl Sys)
            (org.lwjgl.input Keyboard)
            (org.lwjgl.opengl Display DisplayMode GL11)
-           (hyperspace.geometry point2 vector2)
-           (hyperspace.world bullet world)))
+           (hyperspace.geometry Point2 Vector2)
+           (hyperspace.world Bullet World Player Trace Planet)))
 
 (declare start-ui)
 (declare setup-display)
 (declare get-time)
 (declare ui-loop)
 (declare clear-display)
-(declare render-traces)
-(declare render-planets)
-(declare render-players)
-(declare render-bullets)
 (declare process-input)
-(declare render-trace)
-(declare render-planet)
-(declare render-player)
-(declare render-bullet)
+(defmulti render class)
 
 (def window-width 800)
 (def window-height 600)
@@ -49,10 +42,7 @@
   (loop [time (get-time)
          world init-world]
     (clear-display)
-    (render-traces world)
-    (render-planets world)
-    (render-players world)
-    (render-bullets world)
+    (render world)
     (let [world (process-input world)]
       (if (Display/isCloseRequested)
         (Display/destroy)
@@ -66,31 +56,12 @@
 (defn clear-display []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
 
-(defn render-traces [world]
-  (doseq [trace (:traces world)]
-    (render-trace trace)))
-
-(defn render-planets [world]
-  (doseq [planet (:planets world)]
-    (render-planet planet)))
-
-(defn render-players [world]
-  (doseq [player (:players world)]
-    (render-player player)))
-
-(defn render-bullets [world]
-  (doseq [bullet (:bullets world)]
-    (render-bullet bullet)))
-
 (defn process-input [world]
   (if (Keyboard/next)
-    (let [planets (:planets world)
-          players (:players world)
-          bullets (conj (:bullets world)
-                        (bullet. (:center (first players)) (vector2. 1 1)))
-          traces (:traces world)
-          new-world (world. planets players bullets traces)]
-      new-world)
+    (let [{[{player-center :center} & _] :players
+           bullets                       :bullets} world]
+      (assoc world
+        :bullets (conj bullets (Bullet. player-center (Vector2. 1 1)))))
     world))
 
 (defn normalize-x [x]
@@ -99,31 +70,27 @@
 (defn normalize-y [y]
   (/ y window-height))
 
-(defn space-point-to-display [point]
-  (point2.
-    (- (* 2 (normalize-x (* (:x point) scale))) 1)
-    (- (* 2 (normalize-y (* (:y point) scale))) 1)))
+(defn space-point-to-display [{x :x y :y :as point}]
+  (assoc point
+    :x (- (* 2 (normalize-x (* x scale))) 1)
+    :y (- (* 2 (normalize-y (* y scale))) 1)))
 
-(defn render-trace
-  "Suddenly, a trace renders as a yellow point."
+(defmethod render Trace
   [trace]
   (GL11/glColor3f 1 1 0)
   (let [center (space-point-to-display (:center trace))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 1))
         y1 (- center-y (normalize-y 1))
         x2 (+ center-x (normalize-x 1))
         y2 (+ center-y (normalize-y 1))]
     (GL11/glRectf x1 y1 x2 y2)))
 
-(defn render-planet
-  "A planet now renders as green rectangle."
+(defmethod render Planet
   [planet]
   (GL11/glColor3f 0 1 0)
   (let [center (space-point-to-display (:center planet))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         radius-px (* (:radius planet) scale)
         delta-x (normalize-x radius-px)
         delta-y (normalize-y radius-px)
@@ -133,26 +100,35 @@
         y2 (+ center-y delta-y)]
     (GL11/glRectf x1 y1 x2 y2)))
 
-(defn render-player [player]
-  "A player now renders as a, well, blue rectangle."
+(defmethod render Player
+  [player]
   (GL11/glColor3f 0 0 1)
   (let [center (space-point-to-display (:center player))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 2))
         y1 (- center-y (normalize-y 2))
         x2 (+ center-x (normalize-x 2))
         y2 (+ center-y (normalize-y 2))]
     (GL11/glRectf x1 y1 x2 y2)))
 
-(defn render-bullet [bullet]
-  "A bullet now renders as a... guess what? Right, red rectangle!"
+(defmethod render Bullet
+  [bullet]
   (GL11/glColor3f 1 0 0)
   (let [center (space-point-to-display (:center bullet))
-        center-x (:x center)
-        center-y (:y center)
+        {center-x :x center-y :y} center
         x1 (- center-x (normalize-x 1))
         y1 (- center-y (normalize-y 1))
         x2 (+ center-x (normalize-x 1))
         y2 (+ center-y (normalize-y 1))]
     (GL11/glRectf x1 y1 x2 y2)))
+
+(defmethod render World
+  [{planets :planets
+    players :players
+    bullets :bullets
+    traces  :traces}]
+  (doseq [object (concat traces
+                         planets
+                         players
+                         bullets)]
+    (render object)))

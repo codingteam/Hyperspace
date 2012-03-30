@@ -1,19 +1,19 @@
 (ns hyperspace.geometry)
 
-(defrecord point2 [x y])
-(defrecord vector2 [x y])
+(defrecord Point2 [x y])
+(defrecord Vector2 [x y])
 
 (defn make-vector-radial
   [length angle]
   (let [x (* length (Math/cos angle))
         y (* length (Math/sin angle))]
-    (vector2. x y)))
+    (Vector2. x y)))
 
 (defn point-move
   [point vector]
   (let [new-x (+ (:x point) (:x vector))
         new-y (+ (:y point) (:y vector))]
-    (point2. new-x new-y)))
+    (Point2. new-x new-y)))
 
 (defn point-distance
   [p1 p2]
@@ -28,7 +28,7 @@
   [v1 v2]
   (let [new-x (+ (:x v1) (:x v2))
         new-y (+ (:y v1) (:y v2))]
-    (vector2. new-x new-y)))
+    (Vector2. new-x new-y)))
 
 (defn bearing-to
   [p1 p2]
