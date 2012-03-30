@@ -2,46 +2,45 @@
   (:use (hyperspace gravity
                     geometry
                     world))
-  (:import (hyperspace.world bullet
-                             trace
-                             world)))
+  (:import (hyperspace.world Bullet
+                             Trace
+                             World)))
 
 (def max-traces 1000)
 
 (defn move-bullet
   [bullet planets]
   (let [acceleration (get-acceleration bullet planets)
-        position (:center bullet)
-        velocity (:velocity bullet)
-        new-position (point-move position velocity)
-        new-velocity (vector-sum velocity acceleration)]
-    (bullet. new-position new-velocity)))
+        {position :center
+         velocity :velocity} bullet]
+    (assoc bullet
+      :center   (point-move position velocity)
+      :velocity (vector-sum velocity acceleration))))
 
 (defn destroy-bullet?
   [bullet planets]
   (let [bullet-center (:center bullet)]
-    (some #(<= (point-distance bullet-center
-                               (:center %))
-               (:radius %))
+    (some (fn [{planet-radius :radius
+                planet-center :center}]
+            (<= (point-distance bullet-center
+                                planet-center)
+                planet-radius))
           planets)))
 
 (defn update-world
   "Simulates few steps for world."
   [init-world time-delta]
   (loop [time time-delta
-         world init-world]
+
+         {bullets :bullets
+          planets :planets
+          traces  :traces :as world} init-world]
     (if (<= time 0)
       world
-      (let [planets (:planets world)
-            bullets (:bullets world)
-            traces (:traces world)
-            new-planets planets
-            new-players (:players world)
-            new-bullets (map #(move-bullet % planets)
-                         (filter #(not (destroy-bullet? % planets))
-                                 bullets))
-            new-traces (concat (map #(trace. (:center %)) bullets)
-                               (take max-traces traces))
-            new-world (world. new-planets new-players new-bullets new-traces)
-            new-time (- time 1)]
-        (recur new-time new-world)))))
+      (recur (- time 1)
+             (assoc world
+               :bullets (map #(move-bullet % planets)
+                             (filter #(not (destroy-bullet? % planets))
+                                     bullets))
+               :traces  (concat (map #(Trace. (:center %)) bullets)
+                                (take max-traces traces)))))))
