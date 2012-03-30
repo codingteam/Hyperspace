@@ -2,9 +2,9 @@
   (:use (hyperspace gravity
                     geometry
                     world))
-  (:import (hyperspace.world bullet
-                             trace
-                             world)))
+  (:import (hyperspace.world Bullet
+                             Trace
+                             World)))
 
 (def max-traces 1000)
 
@@ -42,5 +42,5 @@
                :bullets (map #(move-bullet % planets)
                              (filter #(not (destroy-bullet? % planets))
                                      bullets))
-               :traces  (concat (map #(trace. (:center %)) bullets)
+               :traces  (concat (map #(Trace. (:center %)) bullets)
                                 (take max-traces traces)))))))

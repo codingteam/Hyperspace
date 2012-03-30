@@ -5,8 +5,8 @@
   (:import (org.lwjgl Sys)
            (org.lwjgl.input Keyboard)
            (org.lwjgl.opengl Display DisplayMode GL11)
-           (hyperspace.geometry point2 vector2)
-           (hyperspace.world bullet world)))
+           (hyperspace.geometry Point2 Vector2)
+           (hyperspace.world Bullet World)))
 
 (declare start-ui)
 (declare setup-display)
@@ -87,7 +87,7 @@
     (let [{[{player-center :center} & _] :players
            bullets                       :bullets} world]
       (assoc world
-        :bullets (conj bullets (bullet. player-center (vector2. 1 1)))))
+        :bullets (conj bullets (Bullet. player-center (Vector2. 1 1)))))
     world))
 
 (defn normalize-x [x]

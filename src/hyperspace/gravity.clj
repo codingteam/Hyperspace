@@ -1,6 +1,6 @@
 (ns hyperspace.gravity
   (:use (hyperspace geometry))
-  (:import (hyperspace.geometry vector2)))
+  (:import (hyperspace.geometry Vector2)))
 
 (def gravity-constant 3);6.6725e-11) TODO: Fix this!
 (def bullet-mass 1)
@@ -23,5 +23,5 @@
 (defn get-acceleration
   [bullet planets]
   (reduce #(vector-sum %1 (planet-gravity-force bullet %2))
-          (vector2. 0 0)
+          (Vector2. 0 0)
           planets))
