@@ -28,9 +28,7 @@
     (Planet. (random-point) size size))) ;;TODO make planet mass something like sqrt(radius)*10^20
 
 (defn generate-planets [n]
-  (if (= n 0)
-    nil
-    (cons (random-planet) (generate-planets (- n 1)))))
+  (repeatedly n random-planet))
 
 ;;TODO Place players in different parts of a world.  
 (defn generate-world
