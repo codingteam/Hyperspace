@@ -2,7 +2,7 @@
   (:use (hyperspace geometry))
   (:import (hyperspace.geometry Vector2)))
 
-(def gravity-constant 3);6.6725e-11) TODO: Fix this!
+(def gravity-constant 6.6725e-11)
 (def bullet-mass 1)
 
 (defn gravity-force

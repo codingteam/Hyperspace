@@ -57,7 +57,8 @@
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
 
 (defn process-input [world]
-  (if (Keyboard/next)
+  (if (and (Keyboard/next)
+           (Keyboard/getEventKeyState))
     (let [{[{player-center :center} & _] :players
            bullets                       :bullets} world]
       (->> (Vector2. 1 1)

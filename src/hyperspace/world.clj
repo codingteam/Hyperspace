@@ -15,17 +15,19 @@
 (def min-y 100)
 (def max-y 500)
 
-(def min-planet-size 20)
-(def max-planet-size 100)
+(def min-planet-radius 20)
+(def max-planet-radius 100)
 
 (defn random-point []
   (Point2. (rand-range min-x max-x)
            (rand-range min-y max-y)))
 
 (defn random-planet []
-  (let [size (rand-range min-planet-size
-                         max-planet-size)]
-    (Planet. (random-point) size size))) ;;TODO make planet mass something like sqrt(radius)*10^20
+  (let [radius (rand-range min-planet-radius
+                           max-planet-radius)
+        mass (* (Math/sqrt radius)
+                (Math/pow 10 12))]
+    (Planet. (random-point) mass radius)))
 
 (defn generate-planets [n]
   (repeatedly n random-planet))
