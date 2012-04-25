@@ -57,7 +57,8 @@
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
 
 (defn process-input [world]
-  (if (Keyboard/next)
+  (if (and (Keyboard/next)
+           (Keyboard/getEventKeyState))
     (let [{[{player-center :center} & _] :players
            bullets                       :bullets
            traces                        :traces} world
@@ -68,6 +69,16 @@
                       :traces  (conj traces trace))]
         new-world)
     world))
+
+(defn draw-ellipse [x y a b segments]
+  (let [delta-angle (/ (* 2 Math/PI) segments)]
+    (GL11/glBegin GL11/GL_POLYGON)
+    (doseq [angle (->> 0.0
+                       (iterate (partial + delta-angle))
+                       (take segments))]
+      (GL11/glVertex2f (+ (* a (Math/cos angle)) x)
+                       (+ (* b (Math/sin angle)) y)))
+    (GL11/glEnd)))
 
 (defn normalize-x [x]
   (/ x window-width))
@@ -98,23 +109,19 @@
   (let [center (space-point-to-display (:center planet))
         {center-x :x center-y :y} center
         radius-px (* (:radius planet) scale)
-        delta-x (normalize-x radius-px)
-        delta-y (normalize-y radius-px)
-        x1 (- center-x delta-x)
-        y1 (- center-y delta-y)
-        x2 (+ center-x delta-x)
-        y2 (+ center-y delta-y)]
-    (GL11/glRectf x1 y1 x2 y2)))
+        radius-x (* 2 (normalize-x radius-px))
+        radius-y (* 2 (normalize-y radius-px))]
+    (draw-ellipse center-x center-y radius-x radius-y 30)))
 
 (defmethod render Player
   [player]
   (GL11/glColor3f 0 0 1)
   (let [center (space-point-to-display (:center player))
         {center-x :x center-y :y} center
-        x1 (- center-x (normalize-x 2))
-        y1 (- center-y (normalize-y 2))
-        x2 (+ center-x (normalize-x 2))
-        y2 (+ center-y (normalize-y 2))]
+        x1 (- center-x (normalize-x 20))
+        y1 (- center-y (normalize-y 20))
+        x2 (+ center-x (normalize-x 20))
+        y2 (+ center-y (normalize-y 20))]
     (GL11/glRectf x1 y1 x2 y2)))
 
 (defmethod render Bullet
@@ -122,10 +129,10 @@
   (GL11/glColor3f 1 0 0)
   (let [center (space-point-to-display (:center bullet))
         {center-x :x center-y :y} center
-        x1 (- center-x (normalize-x 1))
-        y1 (- center-y (normalize-y 1))
-        x2 (+ center-x (normalize-x 1))
-        y2 (+ center-y (normalize-y 1))]
+        x1 (- center-x (normalize-x 7))
+        y1 (- center-y (normalize-y 7))
+        x2 (+ center-x (normalize-x 7))
+        y2 (+ center-y (normalize-y 7))]
     (GL11/glRectf x1 y1 x2 y2)))
 
 (defmethod render World
