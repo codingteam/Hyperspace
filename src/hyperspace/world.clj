@@ -6,7 +6,7 @@
 (defrecord Planet [center mass radius])
 (defrecord Player [center heading])
 (defrecord Bullet [center velocity])
-(defrecord Trace [center])
+(defrecord Trace [points])
 
 (defrecord World [planets players bullets traces])
 
@@ -39,3 +39,7 @@
     (World. (generate-planets planet-quatinty)
             [(Player. (random-point) 0) (Player. (random-point) 0)]
             [] [])))
+
+(defn make-trace
+  [bullet]
+  (Trace. (list (:center bullet))))

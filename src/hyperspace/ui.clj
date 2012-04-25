@@ -59,9 +59,14 @@
 (defn process-input [world]
   (if (Keyboard/next)
     (let [{[{player-center :center} & _] :players
-           bullets                       :bullets} world]
-      (assoc world
-        :bullets (conj bullets (Bullet. player-center (Vector2. 1 1)))))
+           bullets                       :bullets
+           traces                        :traces} world
+          bullet (Bullet. player-center (Vector2. 1 1))
+          trace (make-trace bullet)
+          new-world (assoc world
+                      :bullets (conj bullets bullet)
+                      :traces  (conj traces trace))]
+        new-world)
     world))
 
 (defn normalize-x [x]
@@ -78,13 +83,14 @@
 (defmethod render Trace
   [trace]
   (GL11/glColor3f 1 1 0)
-  (let [center (space-point-to-display (:center trace))
-        {center-x :x center-y :y} center
-        x1 (- center-x (normalize-x 1))
-        y1 (- center-y (normalize-y 1))
-        x2 (+ center-x (normalize-x 1))
-        y2 (+ center-y (normalize-y 1))]
-    (GL11/glRectf x1 y1 x2 y2)))
+  (doseq [point (:points trace)]
+    (let [center (space-point-to-display point)
+          {center-x :x center-y :y} center
+          x1 (- center-x (normalize-x 1))
+          y1 (- center-y (normalize-y 1))
+          x2 (+ center-x (normalize-x 1))
+          y2 (+ center-y (normalize-y 1))]
+    (GL11/glRectf x1 y1 x2 y2))))
 
 (defmethod render Planet
   [planet]

@@ -27,6 +27,11 @@
                 planet-radius))
           planets)))
 
+(defn update-trace
+  [trace bullet]
+  (Trace. (conj (:points trace)
+            (:center bullet))))
+
 (defn update-world
   "Simulates few steps for world."
   [init-world time-delta]
@@ -42,5 +47,5 @@
                :bullets (map #(move-bullet % planets)
                              (filter #(not (destroy-bullet? % planets))
                                      bullets))
-               :traces  (concat (map #(Trace. (:center %)) bullets)
-                                (take max-traces traces)))))))
+               :traces (map #(update-trace %1 %2)
+                            traces bullets))))))
