@@ -9,7 +9,7 @@
            (hyperspace.world Bullet World Player Trace Planet)))
 
 (declare start-ui)
-(declare setup-display)
+(declare setup-ui)
 (declare get-time)
 (declare ui-loop)
 (declare clear-display)
@@ -25,12 +25,13 @@
 (defn start-ui
   "Starts UI."
   [world]
-  (setup-display)
+  (setup-ui)
   (ui-loop world))
 
-(defn setup-display []
+(defn setup-ui []
   (Display/setDisplayMode (DisplayMode. window-width window-height))
   (Display/create)
+  (Keyboard/enableRepeatEvents true)
   (GL11/glClearColor 0 0 0 0)
   (GL11/glViewport 0 0 window-width window-height))
 
@@ -59,16 +60,49 @@
 (defn process-input [world]
   (if (and (Keyboard/next)
            (Keyboard/getEventKeyState))
-    (let [{[{player-center :center} & _] :players
-           bullets                       :bullets
-           traces                        :traces} world
-          bullet (Bullet. player-center (Vector2. 1 1))
-          trace (make-trace bullet)
-          new-world (assoc world
-                      :bullets (conj bullets bullet)
-                      :traces  (conj traces trace))]
-        new-world)
-    world))
+    (let [key (Keyboard/getEventKey)
+
+          {[player & others] :players
+           bullets           :bullets
+           traces            :traces} world]
+      (cond
+        (= key Keyboard/KEY_UP)
+          (let [power (:power player)]
+            (assoc world
+              :players (conj others
+                         (assoc player
+                           :power (+ power 0.05)))))
+        (= key Keyboard/KEY_DOWN)
+          (let [power (:power player)]
+            (assoc world
+              :players (conj others
+                         (assoc player
+                           :power (- power 0.05)))))
+        (= key Keyboard/KEY_LEFT)
+          (let [heading (:heading player)]
+            (assoc world
+              :players (conj others
+                         (assoc player
+                           :heading (- heading 0.1)))))
+        (= key Keyboard/KEY_RIGHT)
+          (let [heading (:heading player)]
+            (assoc world
+              :players (conj others
+                         (assoc player
+                           :heading (+ heading 0.1)))))
+        (and (= key Keyboard/KEY_SPACE)
+             (not (Keyboard/isRepeatEvent)))
+          (let [{center  :center
+                 heading :heading
+                 power   :power} player
+
+                 bullet (Bullet. center (Vector2. (* power (Math/sin heading))
+                                                  (* power (Math/cos heading))))
+                 trace (make-trace bullet)]
+              (assoc world
+                :bullets (conj bullets bullet)
+                :traces  (conj traces trace)))))
+  world))
 
 (defn draw-ellipse [x y a b segments]
   (let [delta-angle (/ (* 2 Math/PI) segments)]
@@ -90,6 +124,23 @@
   (assoc point
     :x (- (* 2 (normalize-x (* x scale))) 1)
     :y (- (* 2 (normalize-y (* y scale))) 1)))
+
+(defn draw-crosshair
+  [player]
+  (GL11/glColor3f 1 0.5 0.5)
+  (let [{{center-x :x center-y :y} :center
+         heading                   :heading
+         power                     :power} player
+
+        x (+ center-x (* (Math/sin heading) power 20))
+        y (+ center-y (* (Math/cos heading) power 20))
+
+        point (Point2. x y)
+
+        display-point (space-point-to-display point)
+        display-x (:x display-point)
+        display-y (:y display-point)]
+    (draw-ellipse display-x display-y (normalize-x 5) (normalize-y 5) 30)))
 
 (defmethod render Trace
   [trace]
@@ -122,7 +173,8 @@
         y1 (- center-y (normalize-y 20))
         x2 (+ center-x (normalize-x 20))
         y2 (+ center-y (normalize-y 20))]
-    (GL11/glRectf x1 y1 x2 y2)))
+    (GL11/glRectf x1 y1 x2 y2))
+  (draw-crosshair player))
 
 (defmethod render Bullet
   [bullet]
