@@ -5,7 +5,6 @@
   (:import (org.lwjgl Sys)
            (org.lwjgl.input Keyboard)
            (org.lwjgl.opengl Display DisplayMode GL11)
-           (hyperspace.geometry Point2 Vector2)
            (hyperspace.world Bullet World Player Trace Planet)))
 
 (declare start-ui)
@@ -96,8 +95,8 @@
                  heading :heading
                  power   :power} player
 
-                 bullet (Bullet. center (Vector2. (* power (Math/sin heading))
-                                                  (* power (Math/cos heading))))
+                 bullet (Bullet. center (make-vector (* power (Math/sin heading))
+                                                     (* power (Math/cos heading))))
                  trace (make-trace bullet)]
               (assoc world
                 :bullets (conj bullets bullet)
@@ -135,7 +134,7 @@
         x (+ center-x (* (Math/sin heading) power 20))
         y (+ center-y (* (Math/cos heading) power 20))
 
-        point (Point2. x y)
+        point (make-point x y)
 
         display-point (space-point-to-display point)
         display-x (:x display-point)

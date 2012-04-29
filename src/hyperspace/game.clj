@@ -14,7 +14,7 @@
         {position :center
          velocity :velocity} bullet]
     (assoc bullet
-      :center   (point-move position velocity)
+      :center   (move-point position velocity)
       :velocity (vector-sum velocity acceleration))))
 
 (defn destroy-bullet?

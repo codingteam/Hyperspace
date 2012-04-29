@@ -1,7 +1,6 @@
 (ns hyperspace.world
   (:use (hyperspace geometry
-                    misc))
-  (:import (hyperspace.geometry Point2)))
+                    misc)))
 
 (defrecord Planet [center mass radius])
 (defrecord Player [center heading power])
@@ -27,8 +26,8 @@
 (def max-planet-radius 100)
 
 (defn random-point []
-  (Point2. (rand-range min-x max-x)
-           (rand-range min-y max-y)))
+  (make-point (rand-range min-x max-x)
+              (rand-range min-y max-y)))
 
 (defn random-planet []
   (let [radius (rand-range min-planet-radius
