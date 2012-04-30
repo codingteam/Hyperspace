@@ -3,11 +3,8 @@
 (defrecord Point2 [x y])
 (defrecord Vector2 [x y])
 
-(defn make-point [x y]
-  (Point2. x y))
-
-(defn make-vector [x y]
-  (Vector2. x y))
+(def make-point ->Point2)
+(def make-vector ->Vector2)
 
 (defn make-vector-radial
   [length angle]
