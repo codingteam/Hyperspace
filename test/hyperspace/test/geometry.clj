@@ -36,6 +36,13 @@
     (is (= (:x moved-point) 3))
     (is (= (:y moved-point) 11))))
 
+(deftest point-move-test2
+  (let [point (make-point 0.2 0.4)
+        vector (make-vector 0.4 0.8)
+        moved-point (move-point point vector)]
+    (is (= (:x moved-point) 0.6))
+    (is (= (:y moved-point) 1.2))))
+
 (deftest point-distance-test
   (let
     [point1 (make-point 0 0)
