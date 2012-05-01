@@ -9,7 +9,7 @@
   (/ (* gravity-constant m1 m2) (Math/pow distance 2)))
 
 (defn planet-gravity-force
-  [bullet planet]
+  [planet bullet]
   (let [planet-center (:center planet)
         bullet-center (:center bullet)
         planet-mass (:mass planet)
@@ -21,6 +21,6 @@
 
 (defn get-acceleration
   [bullet planets]
-  (reduce #(vector-sum %1 (planet-gravity-force bullet %2))
+  (reduce #(vector-sum %1 (planet-gravity-force %2 bullet))
           (make-vector 0 0)
           planets))
