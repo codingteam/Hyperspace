@@ -34,3 +34,16 @@
     (is (= (set (:points trace2))
            (set [(make-point 1 0)
                  (make-point 10 20)])))))
+
+(deftest world-test
+  (let [planet1 (make-planet (make-point 1 0) 7000 10000)
+        planet2 (make-planet (make-point 100 400) 3000 5000)
+        player1 (make-player (make-point 10 5) 0 0 "test-player")
+        player2 (make-player (make-point 0 1) 1 0 "test-player2")
+        planets [planet1 planet2]
+        players [player1 player2]
+        world (make-world planets players)]
+    (is (= (set (:planets world))
+           (set planets)))
+    (is (= (set (:players world))
+           (set players)))))

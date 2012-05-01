@@ -12,6 +12,7 @@
 (def make-planet ->Planet)
 (def make-player ->Player)
 (def make-bullet ->Bullet)
+
 (defn make-trace
   [bullet]
   (->Trace (list (:center bullet))))
@@ -21,6 +22,9 @@
   (assoc trace
     :points (conj (:points trace)
                   (:center bullet))))
+
+(defn make-world [planets players]
+  (->World planets players [] []))
 
 (def min-x 100)
 (def max-x 700)
@@ -48,10 +52,8 @@
   (make-player (random-point) 0 0 name))
 
 ;;TODO Place players in different parts of a world.  
-(defn generate-world
-  []
+(defn generate-world []
   (let [planet-quatinty (rand-range 2 5)] ;; 2 to 5 planets should be fine
-    (World. (generate-planets planet-quatinty)
-            [(generate-player "player1") (generate-player "player2")]
-            [] [])))
+    (make-world (generate-planets planet-quatinty)
+                [(generate-player "player1") (generate-player "player2")])))
 
