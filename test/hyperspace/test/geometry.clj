@@ -1,12 +1,7 @@
 (ns hyperspace.test.geometry
+  (:use (hyperspace.test utils))
   (:use (hyperspace geometry))
   (:use (clojure test)))
-
-(defn compare-with-eps
-  [eps a b]
-  (< (Math/abs (- a b)) eps))
-
-(def almost= (partial compare-with-eps 1e-6))
 
 (deftest point-test
   (let [{x :x y :y} (make-point 10 20)]
