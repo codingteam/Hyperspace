@@ -1,7 +1,9 @@
 (ns hyperspace.test.geometry
+  (:use (clojure test))
   (:use (hyperspace.test utils))
-  (:use (hyperspace geometry))
-  (:use (clojure test)))
+  (:use (hyperspace geometry)))
+
+;; Object creation tests
 
 (deftest point-test
   (let [{x :x y :y} (make-point 10 20)]
@@ -12,6 +14,8 @@
   (let [{x :x y :y} (make-vector 100 500)]
     (is (almost= x 100))
     (is (almost= y 500))))
+
+;; Object behavior tests
 
 (deftest point-move-test
   (let
