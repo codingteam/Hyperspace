@@ -47,6 +47,17 @@
     (is (almost= (:x sum) 4))
     (is (almost= (:y sum) 6))))
 
+(deftest vector-length-test
+  (let [v (make-vector 10 15)]
+    (is (almost= (vector-length v)
+                 (Math/sqrt (+ (* 10 10)
+                               (* 15 15)))))))
+
+(deftest vector-bearing-test
+  (let [v (make-vector 0 -5)]
+    (is (almost= (vector-bearing v)
+                 (- (/ Math/PI 2))))))
+
 (deftest bearing-test
   (let
     [point1 (make-point 0 0)

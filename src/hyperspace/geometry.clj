@@ -33,6 +33,13 @@
         new-y (+ (:y v1) (:y v2))]
     (make-vector new-x new-y)))
 
+(defn vector-length [v]
+  (Math/sqrt (+ (Math/pow (:x v) 2)
+                (Math/pow (:y v) 2))))
+
+(defn vector-bearing [v]
+  (Math/atan2 (:y v) (:x v)))
+
 (defn bearing-to
   [p1 p2]
   (let [x1 (:x p1)
