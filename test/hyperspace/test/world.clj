@@ -26,7 +26,11 @@
     (is (= (:velocity bullet) (make-vector 0 1)))))
 
 (deftest trace-test
-  (let [trace (make-trace [(make-point 1 0)
-                           (make-point 2 2)])]
-    (is (= (:points trace) [(make-point 1 0)
-                            (make-point 2 2)]))))
+  (let [bullet1 (make-bullet (make-point 1 0) (make-vector 0 0))
+        bullet2 (make-bullet (make-point 10 20) (make-vector 0 0))
+        trace1 (make-trace bullet1)
+        trace2 (update-trace trace1 bullet2)]
+    (is (= (:points trace1) [(make-point 1 0)]))
+    (is (= (set (:points trace2))
+           (set [(make-point 1 0)
+                 (make-point 10 20)])))))

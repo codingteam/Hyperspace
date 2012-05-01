@@ -12,7 +12,15 @@
 (def make-planet ->Planet)
 (def make-player ->Player)
 (def make-bullet ->Bullet)
-(def make-trace ->Trace)
+(defn make-trace
+  [bullet]
+  (->Trace (list (:center bullet))))
+
+(defn update-trace
+  [trace bullet]
+  (assoc trace
+    :points (conj (:points trace)
+                  (:center bullet))))
 
 (def min-x 100)
 (def max-x 700)

@@ -95,8 +95,9 @@
                  heading :heading
                  power   :power} player
 
-                 bullet (Bullet. center (make-vector (* power (Math/sin heading))
-                                                     (* power (Math/cos heading))))
+                 bullet (make-bullet center
+                                     (make-vector (* power (Math/sin heading))
+                                                  (* power (Math/cos heading))))
                  trace (make-trace bullet)]
               (assoc world
                 :bullets (conj bullets bullet)

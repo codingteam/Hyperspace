@@ -27,11 +27,6 @@
                 planet-radius))
           planets)))
 
-(defn update-trace
-  [trace bullet]
-  (Trace. (conj (:points trace)
-            (:center bullet))))
-
 (defn update-world
   "Simulates few steps for world."
   [init-world time-delta]
