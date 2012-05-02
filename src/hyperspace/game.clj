@@ -1,12 +1,18 @@
 (ns hyperspace.game
   (:use (hyperspace gravity
                     geometry
-                    world))
-  (:import (hyperspace.world Bullet
-                             Trace
-                             World)))
+                    world)))
 
-(def max-traces 1000)
+(defn update-player-params
+  [world name heading power]
+  (assoc world
+    :players (map (fn [player]
+                    (if (= (:name player) name)
+                      (assoc player
+                        :heading heading
+                        :power power)
+                      player))
+                  (:players world))))
 
 (defn move-bullet
   [bullet planets]
@@ -29,18 +35,17 @@
 
 (defn update-world
   "Simulates few steps for world."
-  [init-world time-delta]
-  (loop [time time-delta
-
-         {bullets :bullets
-          planets :planets
-          traces  :traces :as world} init-world]
+  [world time]
+  (let [{bullets :bullets
+         planets :planets
+         traces  :traces} world]
     (if (<= time 0)
       world
-      (recur (- time 1)
-             (assoc world
-               :bullets (map #(move-bullet % planets)
-                             (filter #(not (destroy-bullet? % planets))
-                                     bullets))
-               :traces (map #(update-trace %1 %2)
-                            traces bullets))))))
+      (recur
+        (assoc world
+          :bullets (map #(move-bullet % planets)
+                        (filter #(not (destroy-bullet? % planets))
+                                bullets))
+          :traces (map #(update-trace %1 %2)
+                       traces bullets))
+        (- time 1)))))

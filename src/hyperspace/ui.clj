@@ -60,44 +60,27 @@
   (if (and (Keyboard/next)
            (Keyboard/getEventKeyState))
     (let [key (Keyboard/getEventKey)
-
-          {[player & others] :players
-           bullets           :bullets
-           traces            :traces} world]
+          {[player & _] :players
+           bullets      :bullets
+           traces       :traces} world
+          {name    :name
+           center  :center
+           power   :power
+           heading :heading} player]
       (cond
         (= key Keyboard/KEY_UP)
-          (let [power (:power player)]
-            (assoc world
-              :players (conj others
-                         (assoc player
-                           :power (+ power 0.05)))))
+          (update-player-params world name heading (+ power 0.05))
         (= key Keyboard/KEY_DOWN)
-          (let [power (:power player)]
-            (assoc world
-              :players (conj others
-                         (assoc player
-                           :power (- power 0.05)))))
+          (update-player-params world name heading (- power 0.05))
         (= key Keyboard/KEY_LEFT)
-          (let [heading (:heading player)]
-            (assoc world
-              :players (conj others
-                         (assoc player
-                           :heading (- heading 0.1)))))
+          (update-player-params world name (- heading 0.1) power)
         (= key Keyboard/KEY_RIGHT)
-          (let [heading (:heading player)]
-            (assoc world
-              :players (conj others
-                         (assoc player
-                           :heading (+ heading 0.1)))))
+          (update-player-params world name (+ heading 0.1) power)
         (and (= key Keyboard/KEY_SPACE)
              (not (Keyboard/isRepeatEvent)))
-          (let [{center  :center
-                 heading :heading
-                 power   :power} player
-
-                 bullet (make-bullet center
-                                     (make-vector (* power (Math/sin heading))
-                                                  (* power (Math/cos heading))))
+          (let [bullet (make-bullet center
+                                    (make-vector (* power (Math/sin heading))
+                                                 (* power (Math/cos heading))))
                  trace (make-trace bullet)]
               (assoc world
                 :bullets (conj bullets bullet)
