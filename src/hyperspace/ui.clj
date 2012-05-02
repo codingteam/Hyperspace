@@ -101,7 +101,8 @@
                  trace (make-trace bullet)]
               (assoc world
                 :bullets (conj bullets bullet)
-                :traces  (conj traces trace)))))
+                :traces  (conj traces trace)))
+        :else world))
   world))
 
 (defn draw-ellipse [x y a b segments]
