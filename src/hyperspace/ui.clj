@@ -4,8 +4,14 @@
                     world))
   (:import (org.lwjgl Sys)
            (org.lwjgl.input Keyboard)
-           (org.lwjgl.opengl Display DisplayMode GL11)
-           (hyperspace.world Bullet World Player Trace Planet)))
+           (org.lwjgl.opengl Display
+                             DisplayMode
+                             GL11)
+           (hyperspace.world Bullet
+                             Planet
+                             Player
+                             Trace
+                             World)))
 
 (declare start-ui)
 (declare setup-ui)
@@ -27,7 +33,8 @@
   (setup-ui)
   (ui-loop world))
 
-(defn setup-ui []
+(defn setup-ui
+  []
   (Display/setDisplayMode (DisplayMode. window-width window-height))
   (Display/create)
   (Keyboard/enableRepeatEvents true)
@@ -38,7 +45,8 @@
   []
   (/ (Sys/getTime) (Sys/getTimerResolution)))
 
-(defn ui-loop [init-world]
+(defn ui-loop
+  [init-world]
   (loop [time (get-time)
          world init-world]
     (clear-display)
@@ -53,10 +61,12 @@
           (Display/update)
           (recur new-time new-world))))))
 
-(defn clear-display []
+(defn clear-display
+  []
   (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
 
-(defn process-input [world]
+(defn process-input
+  [world]
   (if (and (Keyboard/next)
            (Keyboard/getEventKeyState))
     (let [key (Keyboard/getEventKey)
@@ -88,7 +98,8 @@
         :else world))
   world))
 
-(defn draw-ellipse [x y a b segments]
+(defn draw-ellipse
+  [x y a b segments]
   (let [delta-angle (/ (* 2 Math/PI) segments)]
     (GL11/glBegin GL11/GL_POLYGON)
     (doseq [angle (->> 0.0
@@ -98,13 +109,16 @@
                        (+ (* b (Math/sin angle)) y)))
     (GL11/glEnd)))
 
-(defn normalize-x [x]
+(defn normalize-x
+  [x]
   (/ x window-width))
 
-(defn normalize-y [y]
+(defn normalize-y
+  [y]
   (/ y window-height))
 
-(defn space-point-to-display [{x :x y :y :as point}]
+(defn space-point-to-display
+  [{x :x y :y :as point}]
   (assoc point
     :x (- (* 2 (normalize-x (* x scale))) 1)
     :y (- (* 2 (normalize-y (* y scale))) 1)))

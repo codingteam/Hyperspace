@@ -1,8 +1,8 @@
 (ns hyperspace.test.game
-  (:use (clojure test))
-  (:use (hyperspace game
+  (:use (clojure test)
+        (hyperspace game
                     geometry
-                    world)))
+                    world))
 
 (deftest player-params-test
   (let [player1 (make-player (make-point 0 0) 0 0 "p1")

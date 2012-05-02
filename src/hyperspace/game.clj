@@ -1,6 +1,6 @@
 (ns hyperspace.game
-  (:use (hyperspace gravity
-                    geometry
+  (:use (hyperspace geometry
+                    gravity
                     world)))
 
 (defn update-player-params

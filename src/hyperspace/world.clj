@@ -23,7 +23,8 @@
     :points (conj (:points trace)
                   (:center bullet))))
 
-(defn make-world [planets players]
+(defn make-world
+  [planets players]
   (->World planets players [] []))
 
 (def min-x 100)
@@ -34,25 +35,30 @@
 (def min-planet-radius 20)
 (def max-planet-radius 100)
 
-(defn random-point []
+(defn random-point
+  []
   (make-point (rand-range min-x max-x)
               (rand-range min-y max-y)))
 
-(defn random-planet []
+(defn random-planet
+  []
   (let [radius (rand-range min-planet-radius
                            max-planet-radius)
         mass (* (Math/sqrt radius)
                 (Math/pow 10 12))]
     (make-planet (random-point) radius mass)))
 
-(defn generate-planets [n]
+(defn generate-planets
+  [n]
   (repeatedly n random-planet))
 
-(defn generate-player [name]
+(defn generate-player
+  [name]
   (make-player (random-point) 0 0 name))
 
-;;TODO Place players in different parts of a world.  
-(defn generate-world []
+;; TODO Place players in different parts of a world.
+(defn generate-world
+  []
   (let [planet-quatinty (rand-range 2 5)] ;; 2 to 5 planets should be fine
     (make-world (generate-planets planet-quatinty)
                 [(generate-player "player1") (generate-player "player2")])))

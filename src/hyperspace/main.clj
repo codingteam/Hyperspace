@@ -1,7 +1,8 @@
 (ns hyperspace.main
-  (:use (hyperspace world
-                    ui)))
+  (:use (hyperspace ui
+                    world)))
 
-(defn -main [& args]
+(defn -main
+  [& args]
   (let [world (generate-world)]
     (start-ui world)))

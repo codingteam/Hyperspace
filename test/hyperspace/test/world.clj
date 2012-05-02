@@ -1,7 +1,7 @@
 (ns hyperspace.test.world
-  (:use (clojure test))
-  (:use (hyperspace.test utils))
-  (:use (hyperspace geometry
+  (:use (clojure test)
+        (hyperspace.test utils)
+        (hyperspace geometry
                     world)))
 
 ;; Object creation tests
