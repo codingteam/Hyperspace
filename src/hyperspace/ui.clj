@@ -83,18 +83,12 @@
         (= key Keyboard/KEY_DOWN)
           (update-player-params world name heading (- power 0.05))
         (= key Keyboard/KEY_LEFT)
-          (update-player-params world name (- heading 0.1) power)
-        (= key Keyboard/KEY_RIGHT)
           (update-player-params world name (+ heading 0.1) power)
+        (= key Keyboard/KEY_RIGHT)
+          (update-player-params world name (- heading 0.1) power)
         (and (= key Keyboard/KEY_SPACE)
              (not (Keyboard/isRepeatEvent)))
-          (let [bullet (make-bullet center
-                                    (make-vector (* power (Math/sin heading))
-                                                 (* power (Math/cos heading))))
-                 trace (make-trace bullet)]
-              (assoc world
-                :bullets (conj bullets bullet)
-                :traces  (conj traces trace)))
+          (fire world name)
         :else world))
   world))
 
@@ -130,8 +124,8 @@
          heading                   :heading
          power                     :power} player
 
-        x (+ center-x (* (Math/sin heading) power 20))
-        y (+ center-y (* (Math/cos heading) power 20))
+        x (+ center-x (* (Math/cos heading) power 20))
+        y (+ center-y (* (Math/sin heading) power 20))
 
         point (make-point x y)
 

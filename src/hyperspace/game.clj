@@ -3,6 +3,10 @@
                     gravity
                     world)))
 
+(defn get-player
+  [world name]
+  (first (filter #(= name (:name %)) (:players world))))
+
 (defn update-player-params
   [world name heading power]
   (assoc world
@@ -13,6 +17,18 @@
                         :power power)
                       player))
                   (:players world))))
+
+(defn fire
+  [world player-name]
+  (let [player (get-player world player-name)
+        {point :center
+         power :power
+         angle :heading} player
+        bullet (make-bullet point (make-vector-radial power angle))
+        trace (make-trace bullet)]
+    (assoc world
+      :bullets (conj (:bullets world) bullet)
+      :traces  (conj (:traces world) trace))))
 
 (defn move-bullet
   [bullet planets]
@@ -43,9 +59,11 @@
       world
       (recur
         (assoc world
-          :bullets (map #(move-bullet % planets)
-                        (filter #(not (destroy-bullet? % planets))
-                                bullets))
-          :traces (map #(update-trace %1 %2)
-                       traces bullets))
+          :bullets (doall
+                     (map #(move-bullet % planets)
+                       (filter #(not (destroy-bullet? % planets))
+                               bullets)))
+          :traces (doall
+                    (map #(update-trace %1 %2)
+                      traces bullets)))
         (- time 1)))))

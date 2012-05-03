@@ -1,10 +1,32 @@
 (ns hyperspace.test.game
   (:use (clojure test)
-        (hyperspace.test utils)
+        (hyperspace.test cases
+                         utils)
         (hyperspace game
                     geometry
                     gravity
                     world)))
+
+;; Helper functions:
+
+(defn bullet-count
+  [world]
+  (count (:bullets world)))
+
+(defn player-count
+  [world]
+  (count (:players world)))
+
+(defn trace-count
+  [world]
+  (count (:traces world)))
+
+;; Simple tests:
+
+(deftest get-player-test
+  (let [world (get-test-world)
+        player (get-player world "player-1")]
+    (is (= (:name player) "player-1"))))
 
 (deftest player-params-test
   (let [player1 (make-player (make-point 0 0) 0 0 "p1")
@@ -17,6 +39,14 @@
            (set players)))
     (is (= (set (:players world2))
            (set [player1 player2-changed])))))
+
+(deftest fire-test
+  (let [world1 (get-test-world)
+        world2 (fire world1 "player-1")
+        world3 (fire world2 "player-2")]
+    (is (= (bullet-count world1) 0))
+    (is (= (bullet-count world2) 1))
+    (is (= (bullet-count world3) 2))))
 
 (deftest bullet-move-test
   (let [planet1 (make-planet (make-point 0 0) 1 100)
@@ -39,3 +69,21 @@
         bullet2 (make-bullet (make-point 4 4) (make-vector 0 0))]
     (is (destroy-bullet? bullet1 [planet]))
     (is (not (destroy-bullet? bullet2 [planet])))))
+
+;; Complex tests:
+
+(deftest trace-test
+  (let [world1 (get-test-world)
+        world2 (fire world1 "player-1")
+        world3 (update-world world2 10000)
+        world4 (update-world (fire world3 "player-1") 10000)]
+    (is (= (bullet-count world3) 0))
+    (is (= (trace-count world3) 1))
+
+    (is (= (bullet-count world4) 0))
+    (is (= (trace-count world4) 2))))
+
+(deftest kill-test
+  (let [world1 (get-test-world)
+        world2 (update-world (fire world1 "player-2") 10000)]
+    (is (= (player-count world2) 1))))
