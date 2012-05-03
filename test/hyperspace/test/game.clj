@@ -32,3 +32,10 @@
                  (:x new-velocity)))
     (is (almost= (:y (:velocity new-bullet))
                  (:y new-velocity)))))
+
+(deftest bullet-destroy-test
+  (let [planet (make-planet (make-point 0 0) 5 100)
+        bullet1 (make-bullet (make-point 1 1) (make-vector 0 0))
+        bullet2 (make-bullet (make-point 4 4) (make-vector 0 0))]
+    (is (destroy-bullet? bullet1 [planet]))
+    (is (not (destroy-bullet? bullet2 [planet])))))
