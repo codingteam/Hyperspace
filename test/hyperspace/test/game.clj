@@ -72,6 +72,16 @@
 
 ;; Complex tests:
 
+(deftest simple-trace-test
+  (let [world1 (get-test-world)
+        world2 (fire world1 "player-1")
+        bullet1 (first (:bullets world2))
+        world3 (update-world world2 1)
+        bullet2 (first (:bullets world3))
+        trace (first (:traces world3))]
+      (is (= (first (:points trace))
+             (:center bullet1)))))
+
 (deftest trace-test
   (let [world1 (get-test-world)
         world2 (fire world1 "player-1")
