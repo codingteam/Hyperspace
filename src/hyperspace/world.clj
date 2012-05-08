@@ -4,28 +4,20 @@
 
 (defrecord Planet [center radius mass])
 (defrecord Player [center heading power name])
-(defrecord Bullet [center velocity])
-(defrecord Trace [points])
+(defrecord Bullet [center velocity status traces])
 
-(defrecord World [planets players bullets traces])
+(defrecord World [planets players bullets])
 
 (def make-planet ->Planet)
 (def make-player ->Player)
-(def make-bullet ->Bullet)
 
-(defn make-trace
-  [bullet]
-  (->Trace (list (:center bullet))))
-
-(defn update-trace
-  [trace bullet]
-  (assoc trace
-    :points (conj (:points trace)
-                  (:center bullet))))
+(defn make-bullet
+  [center velocity]
+  (->Bullet center velocity :alive []))
 
 (defn make-world
   [planets players]
-  (->World planets players [] []))
+  (->World planets players []))
 
 (def min-x 100)
 (def max-x 700)

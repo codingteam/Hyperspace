@@ -10,7 +10,6 @@
            (hyperspace.world Bullet
                              Planet
                              Player
-                             Trace
                              World)))
 
 (declare start-ui)
@@ -134,10 +133,10 @@
         display-y (:y display-point)]
     (draw-ellipse display-x display-y (normalize-x 5) (normalize-y 5) 30)))
 
-(defmethod render Trace
-  [trace]
+(defn draw-traces
+  [bullet]
   (GL11/glColor3f 1 1 0)
-  (doseq [point (:points trace)]
+  (doseq [point (:traces bullet)]
     (let [center (space-point-to-display point)
           {center-x :x center-y :y} center
           x1 (- center-x (normalize-x 1))
@@ -170,22 +169,22 @@
 
 (defmethod render Bullet
   [bullet]
-  (GL11/glColor3f 1 0 0)
-  (let [center (space-point-to-display (:center bullet))
-        {center-x :x center-y :y} center
-        x1 (- center-x (normalize-x 7))
-        y1 (- center-y (normalize-y 7))
-        x2 (+ center-x (normalize-x 7))
-        y2 (+ center-y (normalize-y 7))]
-    (GL11/glRectf x1 y1 x2 y2)))
+  (draw-traces bullet)
+  (when (= (:status bullet) :alive)
+    (GL11/glColor3f 1 0 0)
+    (let [center (space-point-to-display (:center bullet))
+          {center-x :x center-y :y} center
+          x1 (- center-x (normalize-x 7))
+          y1 (- center-y (normalize-y 7))
+          x2 (+ center-x (normalize-x 7))
+          y2 (+ center-y (normalize-y 7))]
+      (GL11/glRectf x1 y1 x2 y2))))
 
 (defmethod render World
   [{planets :planets
     players :players
-    bullets :bullets
-    traces  :traces}]
-  (doseq [object (concat traces
-                         planets
+    bullets :bullets}]
+  (doseq [object (concat planets
                          players
                          bullets)]
     (render object)))
