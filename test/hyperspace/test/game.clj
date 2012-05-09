@@ -25,6 +25,10 @@
   [world]
   (count (:players world)))
 
+(defn world-after
+  [world time]
+  (first (update-world world time)))
+
 ;; Simple tests:
 
 (deftest get-player-test
@@ -91,10 +95,23 @@
 
 ;; Complex tests:
 
+(deftest timing-test
+  (let [world1 (get-test-world)
+        world2 (fire world1 "player-1")
+        [world3 dtime3] (update-world world2 10.5)
+        [world4 dtime4] (update-world world3 0.6)
+        bullet3 (first (:bullets world3))
+        bullet4 (first (:bullets world4))]
+    (is (= (count (:traces bullet3)) 10))
+    (is (almost= dtime3 0.5))
+    (is (almost= dtime4 0.6))
+    (is (= (:center bullet3)
+           (:center bullet4)))))
+
 (deftest complex-firing-test
   (let [world1 (get-test-world)
         world2 (fire world1 "player-1")
-        world3 (update-world world2 10000)]
+        world3 (world-after world2 10000)]
     (is (= (alive-bullet-count world2) 1))
     (is (= (dead-bullets-count world2) 0))
 
@@ -103,5 +120,5 @@
 
 (deftest kill-test
   (let [world1 (get-test-world)
-        world2 (update-world (fire world1 "player-2") 10000)]
+        world2 (world-after (fire world1 "player-2") 10000)]
     (is (= (alive-player-count world2) 1))))

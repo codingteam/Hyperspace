@@ -53,12 +53,12 @@
         :traces   (conj traces position)))))
 
 (defn update-world
-  "Simulates few steps for world."
+  "Simulates few steps for world. Returns new world and remaining time."
   [world time]
   (let [{bullets :bullets
          planets :planets} world]
-    (if (< time 0)
-      world
+    (if (< time 1)
+      [world time]
       (recur (assoc world
                :bullets (doall (map #(update-bullet % planets) bullets)))
              (- time 1)))))

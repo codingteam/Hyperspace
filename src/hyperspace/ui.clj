@@ -55,10 +55,11 @@
         (Display/destroy)
         (let [new-time (get-time)
               time-delta (- new-time time)
-              new-world (update-world world (* time-delta time-scale))]
+              [new-world remaining-time] (update-world world (* time-delta time-scale))]
           (Display/sync fps)
           (Display/update)
-          (recur new-time new-world))))))
+          (recur (+ new-time remaining-time)
+                 new-world))))))
 
 (defn clear-display
   []
