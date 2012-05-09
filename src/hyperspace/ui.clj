@@ -133,10 +133,15 @@
         display-y (:y display-point)]
     (draw-ellipse display-x display-y (normalize-x 5) (normalize-y 5) 30)))
 
+(defn space-point-on-display?
+  [{x :x, y :y}]
+  (and (< 0 x window-width)
+       (< 0 y window-height)))
+
 (defn draw-traces
   [bullet]
   (GL11/glColor3f 1 1 0)
-  (doseq [point (:traces bullet)]
+  (doseq [point (filter space-point-on-display? (:traces bullet))]
     (let [center (space-point-to-display point)
           {center-x :x center-y :y} center
           x1 (- center-x (normalize-x 1))
