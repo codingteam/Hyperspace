@@ -1,8 +1,7 @@
 (ns hyperspace.main
-  (:use (hyperspace ui
-                    world)))
+  (:use [hyperspace game geometry ui world]
+        [clojure.pprint :only (pprint)]))
 
 (defn -main
   [& args]
-  (let [world (generate-world)]
-    (start-ui world)))
+  (start-ui (generate-world 800 600)))

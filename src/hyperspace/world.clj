@@ -1,57 +1,122 @@
 (ns hyperspace.world
-  (:use (hyperspace geometry
-                    misc)))
+  (:use [clojure.pprint :only (pprint)]
+        [clojure.java.io :only (reader writer)]
+        [hyperspace.misc]))
 
-(defrecord Planet [center radius mass])
-(defrecord Player [center heading power name])
-(defrecord Bullet [center velocity status traces])
+(def missile-radius 5)
+(def player-radius 15)
+(def missile-mass 10)
 
-(defrecord World [planets players bullets])
+(def amount-of-planets 3)
+(def amount-of-players 2)
+(def amount-of-missiles 0)
 
-(def make-planet ->Planet)
-(def make-player ->Player)
+;;; Planets related stuff
 
-(defn make-bullet
-  [center velocity]
-  (->Bullet center velocity :alive []))
+(defn make-planet
+  [position radius]
 
-(defn make-world
-  [planets players]
-  (->World planets players []))
+  {:position position
+   :radius radius
+   :mass (* (Math/sqrt radius)
+            (Math/pow 10 7))})
 
-(def min-x 100)
-(def max-x 700)
-(def min-y 100)
-(def max-y 500)
-
-(def min-planet-radius 20)
-(def max-planet-radius 100)
-
-(defn random-point
-  []
-  (make-point (rand-range min-x max-x)
-              (rand-range min-y max-y)))
-
-(defn random-planet
-  []
-  (let [radius (rand-range min-planet-radius
-                           max-planet-radius)
-        mass (* (Math/sqrt radius)
-                (Math/pow 10 12))]
-    (make-planet (random-point) radius mass)))
+(defn add-random-planet
+  [{planets         :planets
+    [width, height] :size
+    :as world}]
+  (let [radius (-> (min width height) (/ 4) rand)
+        x      (rand-range radius (- width radius))
+        y      (rand-range radius (- height radius))]
+    (assoc world
+      :planets (conj planets (make-planet [x, y] radius)))))
 
 (defn generate-planets
-  [n]
-  (repeatedly n random-planet))
+  [world]
+  (-> (iterate add-random-planet world)
+      (nth amount-of-planets)))
 
-(defn generate-player
-  [name]
-  (make-player (random-point) 0 0 name))
+;;; Missles related stuff
 
-;; TODO Place players in different parts of a world.
+(defn make-missile
+  [position velocity trace-index]
+
+  {:position position
+   :velocity velocity
+   :radius missile-radius
+   :mass missile-mass
+   :trace-index trace-index})
+
+(defn add-missile
+  [{missiles :missiles
+    traces   :traces
+    :as world}
+   position velocity]
+  (let [new-missile (make-missile position
+                                  velocity
+                                  (count traces))]
+    (assoc world
+      :missiles (conj missiles new-missile)
+      :traces (conj traces []))))
+
+(defn add-random-missile
+  [{[width, height] :size
+    :as world}]
+  (let [x (rand-range missile-radius (- width missile-radius))
+        y (rand-range missile-radius (- height missile-radius))
+        vx (rand-range -300 300)
+        vy (rand-range -300 300)]
+    (add-missile world [x, y] [vx, vy])))
+
+(defn generate-missiles
+  [world]
+  (-> (iterate add-random-missile world)
+      (nth amount-of-missiles)))
+
+;;; Fragments related stuff
+
+(defn make-fragment
+  [position velocity radius]
+
+  {:position position
+   :velocity velocity
+   :radius radius
+   :mass radius})
+
+;;; Players related stuff
+
+(defn make-player
+  [position heading]
+
+  {:position position
+   :heading heading
+   :radius player-radius})
+
+(defn add-random-player
+  [{[width, height] :size
+    players         :players
+    :as world}]
+  (let [x (rand-range player-radius (- width player-radius))
+        y (rand-range player-radius (- height player-radius))]
+    (assoc world
+      :players (conj players (make-player [x, y] [0, 3.0])))))
+
+(defn generate-players
+  [world]
+  (-> (iterate add-random-player world)
+      (nth amount-of-players)))
+
+;;; World related stuff
+
 (defn generate-world
-  []
-  (let [planet-quatinty (rand-range 2 5)] ;; 2 to 5 planets should be fine
-    (make-world (generate-planets planet-quatinty)
-                [(generate-player "player1") (generate-player "player2")])))
-
+  [width height]
+  (->> {:position [0, 0]
+        :size [width, height]
+        :players []
+        :planets ()
+        :missiles ()
+        :fragments ()
+        :traces []}
+       generate-players
+       generate-planets
+       generate-missiles))

@@ -1,51 +1,65 @@
 (ns hyperspace.geometry)
 
-(defrecord Point2 [x y])
-(defrecord Vector2 [x y])
+(def
+  ^{:arglists '([vtr & vtrs])
+    :doc "Returns the sum of vectors. The result vector has a minimum
+  possible dimension."}
+  vector-sum (partial mapv +))
 
-(def make-point ->Point2)
-(def make-vector ->Vector2)
+(def
+  ^{:arglists '([vtr & vtrs])
+    :doc "If no vtrs are supplied, returns the negation of vtr, else
+  subtracts the vtrs from vtr and returns the result. The result
+  vector has a minimum possible dimension."}
+  vector-subtract
+  (partial mapv -))
 
-(defn make-vector-radial
-  [length angle]
-  (let [x (* length (Math/cos angle))
-        y (* length (Math/sin angle))]
-    (make-vector x y)))
-
-(defn move-point
-  [point vector]
-  (let [new-x (+ (:x point) (:x vector))
-        new-y (+ (:y point) (:y vector))]
-    (make-point new-x new-y)))
-
-(defn point-distance
-  [p1 p2]
-  (let [x1 (:x p1)
-        x2 (:x p2)
-        y1 (:y p1)
-        y2 (:y p2)]
-    (Math/sqrt (+ (Math/pow (- x2 x1) 2)
-                  (Math/pow (- y2 y1) 2)))))
-
-(defn vector-sum
-  [v1 v2]
-  (let [new-x (+ (:x v1) (:x v2))
-        new-y (+ (:y v1) (:y v2))]
-    (make-vector new-x new-y)))
+(defn multiply-by-scalar
+  "Returns the multiplication of vtr and scalar."
+  [vtr scalar]
+  (mapv #(* scalar %) vtr))
 
 (defn vector-length
-  [v]
-  (Math/sqrt (+ (Math/pow (:x v) 2)
-                (Math/pow (:y v) 2))))
+  "Returns the length of vtr."
+  [vtr]
+  (Math/sqrt (reduce #(+ %1 (* %2 %2)) 0.0 vtr)))
 
-(defn vector-bearing
-  [v]
-  (Math/atan2 (:y v) (:x v)))
+(defn normilize-vector
+  [vtr]
+  (let [length (vector-length vtr)]
+    (mapv #(/ % length) vtr)))
 
-(defn bearing-to
+(defn distance
+  "Returns the distance between p1 and p2."
   [p1 p2]
-  (let [x1 (:x p1)
-        x2 (:x p2)
-        y1 (:y p1)
-        y2 (:y p2)]
-    (Math/atan2 (- y2 y1) (- x2 x1))))
+  (vector-length (vector-subtract p1 p2)))
+
+(defn polar->cartesian
+  "Converts polar coordinates to the cartesian ones."
+  [[a, d]]
+  [(* d (Math/cos a))
+   (* d (Math/sin a))])
+
+(defn cartesian->polar
+  "Converts cartesian cooradinates to the polar ones."
+  [[x, y]]
+  [(Math/atan2 y x)
+   (Math/sqrt (+ (* x x) (* y y)))])
+
+(defn circle-X-circle?
+  "Does the first circle intersects the second one?"
+  [{position1 :position radius1 :radius}
+   {position2 :position radius2 :radius}]
+  (<= (distance position1 position2)
+      (+ radius1 radius2)))
+
+(defn circle-X-any-circle?
+  [circle other-circles]
+  (some #(circle-X-circle? % circle) other-circles))
+
+(defn circle-X-rectangle?
+  "Does the circle intersects the rectangle?"
+  [{[cx, cy] :position radius :radius}
+   {[rx, ry] :position [width, height] :size}]
+  (and (<= (- rx radius) cx (+ rx width radius))
+       (<= (- ry radius) cy (+ ry height radius))))

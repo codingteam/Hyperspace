@@ -1,196 +1,141 @@
 (ns hyperspace.ui
-  (:use (hyperspace game
-                    geometry
-                    world))
-  (:import (org.lwjgl Sys)
-           (org.lwjgl.input Keyboard)
-           (org.lwjgl.opengl Display
-                             DisplayMode
-                             GL11)
-           (hyperspace.world Bullet
-                             Planet
-                             Player
-                             World)))
-
-(declare start-ui)
-(declare setup-ui)
-(declare get-time)
-(declare ui-loop)
-(declare clear-display)
-(declare process-input)
-(defmulti render class)
+  (:import [org.lwjgl Sys]
+           [org.lwjgl.opengl Display DisplayMode GL11]
+           [org.lwjgl.input Mouse Keyboard])
+  (:use [hyperspace world geometry game]))
 
 (def window-width 800)
 (def window-height 600)
 (def fps 60)
-(def scale 1) ; pixels per kilometer
-(def time-scale 10) ; rounds per second
 
-(defn start-ui
-  "Starts UI."
-  [world]
-  (setup-ui)
-  (ui-loop world))
+(defn get-time []
+  "Returns current time in milliseconds"
+  (/ (* 1000 (Sys/getTime))
+     (Sys/getTimerResolution)))
 
-(defn setup-ui
-  []
-  (Display/setDisplayMode (DisplayMode. window-width window-height))
-  (Display/create)
-  (Keyboard/enableRepeatEvents true)
-  (GL11/glClearColor 0 0 0 0)
-  (GL11/glViewport 0 0 window-width window-height))
-
-(defn get-time
-  []
-  (/ (Sys/getTime) (Sys/getTimerResolution)))
-
-(defn ui-loop
-  [init-world]
-  (loop [time (get-time)
-         world init-world]
-    (clear-display)
-    (render world)
-    (let [world (process-input world)]
-      (if (Display/isCloseRequested)
-        (Display/destroy)
-        (let [new-time (get-time)
-              time-delta (- new-time time)
-              [new-world remaining-time] (update-world world (* time-delta time-scale))]
-          (Display/sync fps)
-          (Display/update)
-          (recur (+ new-time remaining-time)
-                 new-world))))))
-
-(defn clear-display
-  []
-  (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT GL11/GL_DEPTH_BUFFER_BIT)))
+(defn draw-ellipse
+  [[x, y] radius segments]
+  (let [angle (/ (* 2 Math/PI) segments)]
+    (GL11/glBegin GL11/GL_POLYGON)
+    (dotimes [i segments]
+      (GL11/glVertex2f (->> i (* angle) Math/cos (* radius) (+ x))
+                       (->> i (* angle) Math/sin (* radius) (+ y))))
+    (GL11/glEnd)))
 
 (defn process-input
   [world]
   (if (and (Keyboard/next)
            (Keyboard/getEventKeyState))
-    (let [key (Keyboard/getEventKey)
-          {[player & _] :players
-           bullets      :bullets
-           traces       :traces} world
-          {name    :name
-           center  :center
-           power   :power
-           heading :heading} player]
+    (let [key (Keyboard/getEventKey)]
       (cond
-        (= key Keyboard/KEY_UP)
-          (update-player-params world name heading (+ power 0.05))
-        (= key Keyboard/KEY_DOWN)
-          (update-player-params world name heading (- power 0.05))
         (= key Keyboard/KEY_LEFT)
-          (update-player-params world name (+ heading 0.1) power)
+        (turn-left world 0.1)
+
         (= key Keyboard/KEY_RIGHT)
-          (update-player-params world name (- heading 0.1) power)
+        (turn-right world 0.1)
+
+        (= key Keyboard/KEY_UP)
+        (increase-power world 1)
+
+        (= key Keyboard/KEY_DOWN)
+        (decrease-power world 1)
+
         (and (= key Keyboard/KEY_SPACE)
              (not (Keyboard/isRepeatEvent)))
-          (fire world name)
+        (fire world)
+
         :else world))
-  world))
+    world))
 
-(defn draw-ellipse
-  [x y a b segments]
-  (let [delta-angle (/ (* 2 Math/PI) segments)]
-    (GL11/glBegin GL11/GL_POLYGON)
-    (doseq [angle (->> 0.0
-                       (iterate (partial + delta-angle))
-                       (take segments))]
-      (GL11/glVertex2f (+ (* a (Math/cos angle)) x)
-                       (+ (* b (Math/sin angle)) y)))
-    (GL11/glEnd)))
+(defn render-missile
+  [{position :position
+    radius :radius}]
+  (GL11/glColor3f 1.0 0.0 1.0)
+  (draw-ellipse position radius 30))
 
-(defn normalize-x
-  [x]
-  (/ x window-width))
+(defn render-planet
+  [{position :position
+    radius :radius}]
+  (GL11/glColor3f 0.0 1.0 0.0)
+  (draw-ellipse position radius 30))
 
-(defn normalize-y
-  [y]
-  (/ y window-height))
+(defn render-fragment
+  [{position :position
+    radius :radius}]
+  (GL11/glColor3f 1.0 0.0 0.0)
+  (draw-ellipse position radius 30))
 
-(defn space-point-to-display
-  [{x :x y :y :as point}]
-  (assoc point
-    :x (- (* 2 (normalize-x (* x scale))) 1)
-    :y (- (* 2 (normalize-y (* y scale))) 1)))
+(defn render-trace
+  [trace]
+  (GL11/glColor3f 1.0 1.0 0.0)
+  (GL11/glBegin GL11/GL_LINE_STRIP)
+  (doseq [[x, y] trace]
+    (GL11/glVertex2f x y))
+  (GL11/glEnd))
 
-(defn draw-crosshair
-  [player]
-  (GL11/glColor3f 1 0.5 0.5)
-  (let [{{center-x :x center-y :y} :center
-         heading                   :heading
-         power                     :power} player
+(defn render-player
+  [{[x, y :as position] :position
+    radius              :radius
+    [a, d :as heading]  :heading}]
+  (GL11/glColor3f 0.0 1.0 1.0)
+  (draw-ellipse position radius 30)
 
-        x (+ center-x (* (Math/cos heading) power 20))
-        y (+ center-y (* (Math/sin heading) power 20))
+  (GL11/glColor3f 1.0 1.0 1.0)
+  (GL11/glBegin GL11/GL_LINES)
+  (let [[hx, hy] (-> (polar->cartesian [a (* d 10)])
+                     (vector-sum position))]
+    (GL11/glVertex2f x y)
+    (GL11/glVertex2f hx hy))
+  (GL11/glEnd))
 
-        point (make-point x y)
+(defn render-world
+  [{planets   :planets
+    missiles  :missiles
+    fragments :fragments
+    traces    :traces
+    players   :players
+    :as world}]
+  (GL11/glClear GL11/GL_COLOR_BUFFER_BIT)
+  (doseq [trace traces]       (render-trace trace))
+  (doseq [planet planets]     (render-planet planet))
+  (doseq [missile missiles]   (render-missile missile))
+  (doseq [fragment fragments] (render-fragment fragment))
+  (doseq [player players]     (render-player player))
+  world)
 
-        display-point (space-point-to-display point)
-        display-x (:x display-point)
-        display-y (:y display-point)]
-    (draw-ellipse display-x display-y (normalize-x 5) (normalize-y 5) 30)))
+(defn setup-ui
+  [{[x, y]          :position
+    [width, height] :size}]
 
-(defn space-point-on-display?
-  [{x :x, y :y}]
-  (and (< 0 x window-width)
-       (< 0 y window-height)))
+  ;; Create display
+  (Display/setDisplayMode (DisplayMode. window-width window-height))
+  (Display/create)
 
-(defn draw-traces
-  [bullet]
-  (GL11/glColor3f 1 1 0)
-  (doseq [point (filter space-point-on-display? (:traces bullet))]
-    (let [center (space-point-to-display point)
-          {center-x :x center-y :y} center
-          x1 (- center-x (normalize-x 1))
-          y1 (- center-y (normalize-y 1))
-          x2 (+ center-x (normalize-x 1))
-          y2 (+ center-y (normalize-y 1))]
-    (GL11/glRectf x1 y1 x2 y2))))
+  ;; Init OpenGL
+  (GL11/glMatrixMode GL11/GL_PROJECTION)
+  (GL11/glLoadIdentity)
+  (GL11/glOrtho x (+ x window-width)
+                y (+ y window-height)
+                1 -1)
+  (GL11/glMatrixMode GL11/GL_MODELVIEW))
 
-(defmethod render Planet
-  [planet]
-  (GL11/glColor3f 0 1 0)
-  (let [center (space-point-to-display (:center planet))
-        {center-x :x center-y :y} center
-        radius-px (* (:radius planet) scale)
-        radius-x (* 2 (normalize-x radius-px))
-        radius-y (* 2 (normalize-y radius-px))]
-    (draw-ellipse center-x center-y radius-x radius-y 30)))
+(defn ui-loop
+  [initial-world]
+  (loop [time (get-time)
+         world initial-world]
+    (if (Display/isCloseRequested)
+      (Display/destroy)
+      (let [new-time (get-time)
+            delta-time (- new-time time)
+            new-world (-> world
+                          (update-world delta-time)
+                          process-input
+                          render-world)]
+        (Display/update)
+        (Display/sync fps)
+        (recur new-time new-world)))))
 
-(defmethod render Player
-  [player]
-  (GL11/glColor3f 0 0 1)
-  (let [center (space-point-to-display (:center player))
-        {center-x :x center-y :y} center
-        x1 (- center-x (normalize-x 20))
-        y1 (- center-y (normalize-y 20))
-        x2 (+ center-x (normalize-x 20))
-        y2 (+ center-y (normalize-y 20))]
-    (GL11/glRectf x1 y1 x2 y2))
-  (draw-crosshair player))
-
-(defmethod render Bullet
-  [bullet]
-  (draw-traces bullet)
-  (when (= (:status bullet) :alive)
-    (GL11/glColor3f 1 0 0)
-    (let [center (space-point-to-display (:center bullet))
-          {center-x :x center-y :y} center
-          x1 (- center-x (normalize-x 7))
-          y1 (- center-y (normalize-y 7))
-          x2 (+ center-x (normalize-x 7))
-          y2 (+ center-y (normalize-y 7))]
-      (GL11/glRectf x1 y1 x2 y2))))
-
-(defmethod render World
-  [{planets :planets
-    players :players
-    bullets :bullets}]
-  (doseq [object (concat planets
-                         players
-                         bullets)]
-    (render object)))
+(defn start-ui
+  [world]
+  (setup-ui world)
+  (ui-loop world))

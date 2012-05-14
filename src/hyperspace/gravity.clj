@@ -1,26 +1,16 @@
 (ns hyperspace.gravity
-  (:use (hyperspace geometry)))
+  (:use [hyperspace geometry]))
 
-(def gravity-constant 6.6725e-11)
-(def bullet-mass 1)
+(def gravity-constant 0.1;6.6725e-11
+  )
 
-(defn gravity-force
-  [m1 m2 distance]
-  (/ (* gravity-constant m1 m2) (Math/pow distance 2)))
-
-(defn planet-gravity-force
-  [planet bullet]
-  (let [planet-center (:center planet)
-        bullet-center (:center bullet)
-        planet-mass (:mass planet)
-        distance (point-distance planet-center bullet-center)
-        force (gravity-force planet-mass bullet-mass distance)
-        acceleration (/ force bullet-mass)
-        angle (bearing-to bullet-center planet-center)]
-    (make-vector-radial acceleration angle)))
-
-(defn get-acceleration
-  [bullet planets]
-  (reduce #(vector-sum %1 (planet-gravity-force %2 bullet))
-          (make-vector 0 0)
-          planets))
+(defn gravity-acceleration
+  [{position1 :position mass1 :mass}
+   {position2 :position mass2 :mass}]
+  (let [d (distance position1 position2)
+        force (/ (* gravity-constant mass1 mass2)
+                 (* d d))
+        acceleration (/ force mass1)]
+    (-> (vector-subtract position2 position1)
+        normilize-vector
+        (multiply-by-scalar acceleration))))
