@@ -49,21 +49,27 @@
 
 (defn render-missile
   [{position :position
-    radius :radius}]
+    radius :radius
+    :as missile}]
   (GL11/glColor3f 1.0 0.0 1.0)
-  (draw-ellipse position radius 30))
+  (draw-ellipse position radius 30)
+  missile)
 
 (defn render-planet
   [{position :position
-    radius :radius}]
+    radius :radius
+    :as planet}]
   (GL11/glColor3f 0.0 1.0 0.0)
-  (draw-ellipse position radius 30))
+  (draw-ellipse position radius 30)
+  planet)
 
 (defn render-fragment
   [{position :position
-    radius :radius}]
+    radius :radius
+    :as fragment}]
   (GL11/glColor3f 1.0 0.0 0.0)
-  (draw-ellipse position radius 30))
+  (draw-ellipse position radius 30)
+  fragment)
 
 (defn render-trace
   [trace]
@@ -71,12 +77,14 @@
   (GL11/glBegin GL11/GL_LINE_STRIP)
   (doseq [[x, y] trace]
     (GL11/glVertex2f x y))
-  (GL11/glEnd))
+  (GL11/glEnd)
+  trace)
 
 (defn render-player
   [{[x, y :as position] :position
     radius              :radius
-    [a, d :as heading]  :heading}]
+    [a, d :as heading]  :heading
+    :as player}]
   (GL11/glColor3f 0.0 1.0 1.0)
   (draw-ellipse position radius 30)
 
@@ -86,7 +94,8 @@
                      (vector-sum position))]
     (GL11/glVertex2f x y)
     (GL11/glVertex2f hx hy))
-  (GL11/glEnd))
+  (GL11/glEnd)
+  player)
 
 (defn render-world
   [{planets   :planets
