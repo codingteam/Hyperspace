@@ -1,10 +1,11 @@
 (ns hyperspace.gravity
   (:use [hyperspace geometry]))
 
-(def gravity-constant 0.1;6.6725e-11
-  )
+(def gravity-constant 0.1)
 
 (defn gravity-acceleration
+  "Returns acceleration for the first object under gravity's impact of
+  the second one."
   [{position1 :position mass1 :mass}
    {position2 :position mass2 :mass}]
   (let [d (distance position1 position2)

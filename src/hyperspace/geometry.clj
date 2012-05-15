@@ -54,6 +54,7 @@
       (+ radius1 radius2)))
 
 (defn circle-X-any-circle?
+  "Does the circle intersects any other circles?"
   [circle other-circles]
   (some #(circle-X-circle? % circle) other-circles))
 

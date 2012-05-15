@@ -1,11 +1,16 @@
 (ns hyperspace.misc)
 
 (defn rand-range
-  "Returns a random integer between low (inclusive) and high (inclusive)"
+  "Returns a random integer between low (inclusive) and
+  high (inclusive)"
   [low high]
-  (+ low (rand-int (+ 1 (- high low)))))
+  (-> (- high low)
+      (+ 1)
+      rand-int
+      (+ low)))
 
 (defn saturation
+  "Ensures that the value is not going out of bounds [low, high]"
   [value low high]
   (cond
     (< value low) low
