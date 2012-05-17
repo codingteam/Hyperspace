@@ -116,7 +116,8 @@
         :planets ()
         :missiles ()
         :fragments ()
-        :traces []}
+        :traces []
+        :exit false}
        generate-players
        generate-planets
        generate-missiles))

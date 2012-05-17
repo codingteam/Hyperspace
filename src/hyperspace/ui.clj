@@ -40,6 +40,9 @@
         (= key Keyboard/KEY_DOWN)
         (decrease-power world 1)
 
+        (= key Keyboard/KEY_ESCAPE)
+        (exit world)
+
         (and (= key Keyboard/KEY_SPACE)
              (not (Keyboard/isRepeatEvent)))
         (fire world)
@@ -132,7 +135,8 @@
   [initial-world]
   (loop [time (get-time)
          world initial-world]
-    (if (Display/isCloseRequested)
+    (if (or (Display/isCloseRequested)
+            (:exit world))
       (Display/destroy)
       (let [new-time (get-time)
             delta-time (- new-time time)

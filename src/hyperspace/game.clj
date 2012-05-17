@@ -102,6 +102,10 @@
                                      (- radius 2)))))
       ())))
 
+(defn exit [world]
+  (assoc world
+    :exit true))
+
 (defn update-world
   [{missiles :missiles
     planets :planets
