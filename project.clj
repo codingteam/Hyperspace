@@ -4,4 +4,6 @@
                  [org.lwjgl/lwjgl "2.7.1"]
                  [org.lwjgl/lwjgl-util "2.7.1"]
                  [org.lwjgl/lwjgl-native-platform "2.7.1"]]
+  :dev-dependencies [[midje "1.4.0"]
+                     [lein-midje "1.0.10"]]
   :main hyperspace.main)
