@@ -25,6 +25,8 @@
   (Math/sqrt (reduce #(+ %1 (* %2 %2)) 0.0 vtr)))
 
 (defn normilize-vector
+  "Normilizes vector, that is returns a vector with the same
+  direction, but with the length equal 1."
   [vtr]
   (let [length (vector-length vtr)]
     (mapv #(/ % length) vtr)))
