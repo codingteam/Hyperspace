@@ -19,6 +19,18 @@
   [vtr scalar]
   (mapv #(* scalar %) vtr))
 
+(defn polar->cartesian
+  "Converts polar coordinates to the cartesian ones."
+  [[a, d]]
+  [(* d (Math/cos a))
+   (* d (Math/sin a))])
+
+(defn cartesian->polar
+  "Converts cartesian cooradinates to the polar ones."
+  [[x, y]]
+  [(Math/atan2 y x)
+   (Math/sqrt (+ (* x x) (* y y)))])
+
 (defn vector-length
   "Returns the length of vtr."
   [vtr]
@@ -35,18 +47,6 @@
   "Returns the distance between p1 and p2."
   [p1 p2]
   (vector-length (vector-subtract p1 p2)))
-
-(defn polar->cartesian
-  "Converts polar coordinates to the cartesian ones."
-  [[a, d]]
-  [(* d (Math/cos a))
-   (* d (Math/sin a))])
-
-(defn cartesian->polar
-  "Converts cartesian cooradinates to the polar ones."
-  [[x, y]]
-  [(Math/atan2 y x)
-   (Math/sqrt (+ (* x x) (* y y)))])
 
 (defn circle-X-circle?
   "Does the first circle intersects the second one?"
