@@ -13,5 +13,5 @@
                  (* d d))
         acceleration (/ force mass1)]
     (-> (vector-subtract position2 position1)
-        normilize-vector
+        normalize-vector
         (multiply-by-scalar acceleration))))

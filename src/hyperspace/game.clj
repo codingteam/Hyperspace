@@ -41,12 +41,12 @@
   (let [{position               :position
          [_, power :as heading] :heading} player
          missile-position (-> (polar->cartesian heading)
-                              normilize-vector
+                              normalize-vector
                               (multiply-by-scalar (+ player-radius
                                                      missile-radius))
                               (vector-sum position))
          missile-velocity (-> (polar->cartesian heading)
-                              normilize-vector
+                              normalize-vector
                               (multiply-by-scalar (* power 100)))]
     (add-missile world
                  missile-position
@@ -91,7 +91,7 @@
              planet-radius     :radius} planet
 
              fragments-position (-> (vector-subtract particle-position planet-position)
-                                    normilize-vector
+                                    normalize-vector
                                     (multiply-by-scalar (+ particle-radius planet-radius 5))
                                     (vector-sum planet-position))]
         (repeatedly 5
