@@ -107,5 +107,4 @@
         :traces []
         :exit false}
        generate-players
-       generate-planets
-       generate-missiles))
+       generate-planets))
