@@ -2,15 +2,13 @@
 
 (def
   ^{:arglists '([vtr & vtrs])
-    :doc "Returns the sum of vectors. The result vector has a minimum
-  possible dimension."}
+    :doc "Returns the sum of vectors."}
   vector-sum (partial mapv +))
 
 (def
   ^{:arglists '([vtr & vtrs])
-    :doc "If no vtrs are supplied, returns the negation of vtr, else
-  subtracts the vtrs from vtr and returns the result. The result
-  vector has a minimum possible dimension."}
+    :doc "If  vtrs are supplied, returns the negation of vtr, else
+  subtracts the vtrs from vtr and returns the result."}
   vector-subtract
   (partial mapv -))
 
@@ -36,8 +34,8 @@
   [vtr]
   (Math/sqrt (reduce #(+ %1 (* %2 %2)) 0.0 vtr)))
 
-(defn normilize-vector
-  "Normilizes vector, that is returns a vector with the same
+(defn normalize-vector
+  "Normalizes vector, that is returns a vector with the same
   direction, but with the length equal 1."
   [vtr]
   (let [length (vector-length vtr)]

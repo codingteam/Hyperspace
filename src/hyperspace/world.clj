@@ -23,11 +23,12 @@
 
 (defn add-random-planet
   [{planets         :planets
+    [x, y]          :position
     [width, height] :size
     :as world}]
-  (let [radius (-> (min width height) (/ 4) rand)
-        x      (rand-range radius (- width radius))
-        y      (rand-range radius (- height radius))]
+  (let [radius (-> (min width height) (/ 5) rand)
+        x      (rand-range (+ x radius) (- (+ x width) radius))
+        y      (rand-range (+ y radius) (- (+ y height) radius))]
     (assoc world
       :planets (conj planets (make-planet [x, y] radius)))))
 
@@ -59,20 +60,6 @@
       :missiles (conj missiles new-missile)
       :traces (conj traces []))))
 
-(defn add-random-missile
-  [{[width, height] :size
-    :as world}]
-  (let [x (rand-range missile-radius (- width missile-radius))
-        y (rand-range missile-radius (- height missile-radius))
-        vx (rand-range -300 300)
-        vy (rand-range -300 300)]
-    (add-missile world [x, y] [vx, vy])))
-
-(defn generate-missiles
-  [world]
-  (-> (iterate add-random-missile world)
-      (nth amount-of-missiles)))
-
 ;;; Fragments related stuff
 
 (defn make-fragment
@@ -93,11 +80,12 @@
    :radius player-radius})
 
 (defn add-random-player
-  [{[width, height] :size
+  [{[x, y]          :position
+    [width, height] :size
     players         :players
     :as world}]
-  (let [x (rand-range player-radius (- width player-radius))
-        y (rand-range player-radius (- height player-radius))]
+  (let [x (rand-range (+ x player-radius) (- (+ x width) player-radius))
+        y (rand-range (+ y player-radius) (- (+ y height) player-radius))]
     (assoc world
       :players (conj players (make-player [x, y] [0, 3.0])))))
 
@@ -119,5 +107,4 @@
         :traces []
         :exit false}
        generate-players
-       generate-planets
-       generate-missiles))
+       generate-planets))

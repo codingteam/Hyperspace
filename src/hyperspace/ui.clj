@@ -126,8 +126,8 @@
   ;; Init OpenGL
   (GL11/glMatrixMode GL11/GL_PROJECTION)
   (GL11/glLoadIdentity)
-  (GL11/glOrtho x (+ x window-width)
-                y (+ y window-height)
+  (GL11/glOrtho x (+ x width)
+                y (+ y height)
                 1 -1)
   (GL11/glMatrixMode GL11/GL_MODELVIEW))
 

@@ -4,4 +4,4 @@
 
 (defn -main
   [& args]
-  (start-ui (generate-world 800 600)))
+  (start-ui (generate-world 1024 768)))
