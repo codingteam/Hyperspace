@@ -133,20 +133,21 @@
 
 (defn ui-loop
   [initial-world]
-  (loop [time (get-time)
-         world initial-world]
+  (loop [initial-timestamp (get-time)
+         accumulated-time  0
+         world             initial-world]
     (if (or (Display/isCloseRequested)
             (:exit world))
       (Display/destroy)
-      (let [new-time (get-time)
-            delta-time (- new-time time)
-            new-world (-> world
-                          (update-world delta-time)
-                          process-input
-                          render-world)]
+
+      (let [new-timestamp (get-time)
+            delta-time    (+ (- new-timestamp initial-timestamp) accumulated-time)
+            [new-world remaining-time] (update-world world delta-time)
+            final-world (-> new-world process-input
+                                      render-world)]
         (Display/update)
         (Display/sync fps)
-        (recur new-time new-world)))))
+        (recur new-timestamp remaining-time final-world)))))
 
 (defn start-ui
   [world]

@@ -106,6 +106,8 @@
   (assoc world
     :exit true))
 
+(def simulation-step 10)
+
 (defn update-world
   [{missiles :missiles
     planets :planets
@@ -113,21 +115,25 @@
     traces :traces
     :as world}
    delta-time]
-  (let [broken-particles (mapcat #(break-particle % planets)
-                                 (concat missiles fragments))
-        ;; FIXME: Duplicate code
-        new-missiles (->> missiles
-                          (filter #(circle-X-rectangle? % world))
-                          (remove #(circle-X-any-circle? % planets))
-                          (map #(update-particle % planets delta-time)))
-        new-fragments (->> fragments
-                           (concat broken-particles)
-                           (filter #(circle-X-rectangle? % world))
-                           (remove #(circle-X-any-circle? % planets))
-                           (map #(update-particle % planets delta-time)))
+  (if (<= delta-time simulation-step)
+    [world delta-time]
+    (let [broken-particles (mapcat #(break-particle % planets)
+                                   (concat missiles fragments))
+          ;; FIXME: Duplicate code
+          new-missiles (->> missiles
+                            (filter #(circle-X-rectangle? % world))
+                            (remove #(circle-X-any-circle? % planets))
+                            (map #(update-particle % planets simulation-step)))
+          new-fragments (->> fragments
+                             (concat broken-particles)
+                             (filter #(circle-X-rectangle? % world))
+                             (remove #(circle-X-any-circle? % planets))
+                             (map #(update-particle % planets simulation-step)))
 
-        new-traces  (reduce update-traces traces new-missiles)]
-    (assoc world
-      :missiles new-missiles
-      :fragments new-fragments
-      :traces new-traces)))
+          new-traces  (reduce update-traces traces new-missiles)]
+      (recur
+        (assoc world
+          :missiles new-missiles
+          :fragments new-fragments
+          :traces new-traces)
+        (- delta-time simulation-step)))))
