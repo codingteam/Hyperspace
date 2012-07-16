@@ -139,17 +139,24 @@
   (and (< 0 x window-width)
        (< 0 y window-height)))
 
+(defn draw-line [x1 y1 x2 y2]
+  (GL11/glBegin GL11/GL_LINE_STRIP)
+  (GL11/glVertex2d x1 y1)
+  (GL11/glVertex2d x2 y2)
+  (GL11/glEnd))
+
+(defn draw-lines [points]
+  (GL11/glBegin GL11/GL_LINES)
+  (doseq [[{x1 :x y1 :y} {x2 :x y2 :y}] (map vector points (rest points))]
+    (GL11/glVertex2d x1 y1)
+    (GL11/glVertex2d x2 y2))
+  (GL11/glEnd))
+
 (defn draw-traces
   [bullet]
   (GL11/glColor3f 1 1 0)
-  (doseq [point (take-nth 10 (filter space-point-on-display? (:traces bullet)))]
-    (let [center (space-point-to-display point)
-          {center-x :x center-y :y} center
-          x1 (- center-x (normalize-x 1))
-          y1 (- center-y (normalize-y 1))
-          x2 (+ center-x (normalize-x 1))
-          y2 (+ center-y (normalize-y 1))]
-    (GL11/glRectf x1 y1 x2 y2))))
+  (let [points (take-nth 8 (:traces bullet))]
+    (draw-lines (map space-point-to-display points))))
 
 (defmethod render Planet
   [planet]
@@ -190,7 +197,4 @@
   [{planets :planets
     players :players
     bullets :bullets}]
-  (doseq [object (concat planets
-                         players
-                         bullets)]
-    (render object)))
+  (dorun (map render (concat planets players bullets))))
