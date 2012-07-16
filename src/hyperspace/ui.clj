@@ -142,7 +142,7 @@
 (defn draw-traces
   [bullet]
   (GL11/glColor3f 1 1 0)
-  (doseq [point (filter space-point-on-display? (:traces bullet))]
+  (doseq [point (take-nth 10 (filter space-point-on-display? (:traces bullet)))]
     (let [center (space-point-to-display point)
           {center-x :x center-y :y} center
           x1 (- center-x (normalize-x 1))
