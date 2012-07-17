@@ -145,7 +145,8 @@
   (GL11/glVertex2d x2 y2)
   (GL11/glEnd))
 
-(defn draw-lines [points]
+(defn draw-lines
+  [points]
   (GL11/glBegin GL11/GL_LINES)
   (doseq [[{x1 :x y1 :y} {x2 :x y2 :y}] (map vector points (rest points))]
     (GL11/glVertex2d x1 y1)
@@ -155,8 +156,10 @@
 (defn draw-traces
   [bullet]
   (GL11/glColor3f 1 1 0)
-  (let [points (take-nth 8 (:traces bullet))]
-    (draw-lines (map space-point-to-display points))))
+  (let [traces (:traces bullet)]
+    (when (seq traces)
+      (let [points (concat (take-nth 8 traces) [(last traces)])]
+        (draw-lines (map space-point-to-display points))))))
 
 (defmethod render Planet
   [planet]
