@@ -3,9 +3,16 @@
                     gravity
                     world)))
 
+(def max-bullets 30)
+
 (defn get-player
   [world name]
   (first (filter #(= name (:name %)) (:players world))))
+
+(defn bullet-alive?
+  [bullet]
+  (let [s (:status bullet)]
+    (= :alive s)))
 
 (defn update-player-params
   [world name heading power]
@@ -24,9 +31,10 @@
         {point :center
          power :power
          angle :heading} player
-        bullet (make-bullet point (make-vector-radial power angle))]
-    (assoc world
-      :bullets (conj (:bullets world) bullet))))
+        bullet (make-bullet point (make-vector-radial power angle))
+        bullets (conj (:bullets world) bullet)
+        n-bullets (map #(assoc %1 :index %2) bullets (range))]
+    (assoc world :bullets n-bullets)))
 
 (defn destroy-bullet?
   [bullet planets]
@@ -40,7 +48,7 @@
 
 (defn update-bullet
   [bullet planets]
-  (if (= (:status bullet) :dead)
+  (if-not (bullet-alive? bullet)
     bullet
     (let [acceleration (get-acceleration bullet planets)
           {position :center
@@ -52,13 +60,16 @@
         :status   (if (destroy-bullet? bullet planets) :dead :alive)
         :traces   (conj traces position)))))
 
+(defn update-world-tick
+  "Simulate one step. Return new world and (dec time)"
+  [[world time]]
+  (let [{:keys [bullets planets]} world
+        nbullets (take max-bullets (map #(update-bullet % planets) bullets))]
+    [(assoc world :bullets nbullets) (dec time)]))
+
 (defn update-world
-  "Simulates few steps for world. Returns new world and remaining time."
+  "Simulates few steps for world. Returns new world and remaining time (zero)."
   [world time]
-  (let [{bullets :bullets
-         planets :planets} world]
-    (if (< time 1)
-      [world time]
-      (recur (assoc world
-               :bullets (doall (map #(update-bullet % planets) bullets)))
-             (- time 1)))))
+  (let [worlds (iterate update-world-tick [world time])
+        d (drop-while (fn [[_ t]] (>= t 1)) worlds)]
+    (first d)))

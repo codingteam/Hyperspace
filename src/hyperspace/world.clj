@@ -4,7 +4,7 @@
 
 (defrecord Planet [center radius mass])
 (defrecord Player [center heading power name])
-(defrecord Bullet [center velocity status traces])
+(defrecord Bullet [center velocity status traces index])
 
 (defrecord World [planets players bullets])
 
@@ -13,7 +13,7 @@
 
 (defn make-bullet
   [center velocity]
-  (->Bullet center velocity :alive []))
+  (->Bullet center velocity :alive [] 0))
 
 (defn make-world
   [planets players]

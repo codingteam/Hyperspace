@@ -38,7 +38,9 @@
   (Display/create)
   (Keyboard/enableRepeatEvents true)
   (GL11/glClearColor 0 0 0 0)
-  (GL11/glViewport 0 0 window-width window-height))
+  (GL11/glViewport 0 0 window-width window-height)
+  (GL11/glEnable GL11/GL_BLEND)
+  (GL11/glBlendFunc GL11/GL_SRC_ALPHA GL11/GL_ONE_MINUS_SRC_ALPHA))
 
 (defn get-time
   []
@@ -153,11 +155,19 @@
     (GL11/glVertex2d x2 y2))
   (GL11/glEnd))
 
+(defn bullet-trace-color-alpha
+  [bullet]
+  (let [idx (:index bullet)
+        c (- 1 (/ idx max-bullets))
+        c (max 0 (min c 1))]
+    (Math/pow c 0.7)))
+
 (defn draw-traces
   [bullet]
-  (GL11/glColor3f 1 1 0)
   (let [traces (:traces bullet)]
     (when (seq traces)
+      (let [alpha (bullet-trace-color-alpha bullet)]
+        (GL11/glColor4f 1 1 0.6 alpha))
       (let [points (concat (take-nth 8 traces) [(last traces)])]
         (draw-lines (map space-point-to-display points))))))
 
@@ -186,7 +196,7 @@
 (defmethod render Bullet
   [bullet]
   (draw-traces bullet)
-  (when (= (:status bullet) :alive)
+  (when (bullet-alive? bullet)
     (GL11/glColor3f 1 0 0)
     (let [center (space-point-to-display (:center bullet))
           {center-x :x center-y :y} center
