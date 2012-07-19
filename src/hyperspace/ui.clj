@@ -38,7 +38,9 @@
   (Display/create)
   (Keyboard/enableRepeatEvents true)
   (GL11/glClearColor 0 0 0 0)
-  (GL11/glViewport 0 0 window-width window-height))
+  (GL11/glViewport 0 0 window-width window-height)
+  (GL11/glEnable GL11/GL_BLEND)
+  (GL11/glBlendFunc GL11/GL_SRC_ALPHA GL11/GL_ONE_MINUS_SRC_ALPHA))
 
 (defn get-time
   []
@@ -139,17 +141,35 @@
   (and (< 0 x window-width)
        (< 0 y window-height)))
 
+(defn draw-line [x1 y1 x2 y2]
+  (GL11/glBegin GL11/GL_LINE_STRIP)
+  (GL11/glVertex2d x1 y1)
+  (GL11/glVertex2d x2 y2)
+  (GL11/glEnd))
+
+(defn draw-lines
+  [points]
+  (GL11/glBegin GL11/GL_LINES)
+  (doseq [[{x1 :x y1 :y} {x2 :x y2 :y}] (map vector points (rest points))]
+    (GL11/glVertex2d x1 y1)
+    (GL11/glVertex2d x2 y2))
+  (GL11/glEnd))
+
+(defn bullet-trace-color-alpha
+  [bullet]
+  (let [idx (:index bullet)
+        c (- 1 (/ idx max-bullets))
+        c (max 0 (min c 1))]
+    (Math/pow c 0.7)))
+
 (defn draw-traces
   [bullet]
-  (GL11/glColor3f 1 1 0)
-  (doseq [point (filter space-point-on-display? (:traces bullet))]
-    (let [center (space-point-to-display point)
-          {center-x :x center-y :y} center
-          x1 (- center-x (normalize-x 1))
-          y1 (- center-y (normalize-y 1))
-          x2 (+ center-x (normalize-x 1))
-          y2 (+ center-y (normalize-y 1))]
-    (GL11/glRectf x1 y1 x2 y2))))
+  (let [traces (:traces bullet)]
+    (when (seq traces)
+      (let [alpha (bullet-trace-color-alpha bullet)]
+        (GL11/glColor4f 1 1 0.6 alpha))
+      (let [points (concat (take-nth 8 traces) [(last traces)])]
+        (draw-lines (map space-point-to-display points))))))
 
 (defmethod render Planet
   [planet]
@@ -176,7 +196,7 @@
 (defmethod render Bullet
   [bullet]
   (draw-traces bullet)
-  (when (= (:status bullet) :alive)
+  (when (bullet-alive? bullet)
     (GL11/glColor3f 1 0 0)
     (let [center (space-point-to-display (:center bullet))
           {center-x :x center-y :y} center
@@ -190,7 +210,4 @@
   [{planets :planets
     players :players
     bullets :bullets}]
-  (doseq [object (concat planets
-                         players
-                         bullets)]
-    (render object)))
+  (dorun (map render (concat planets players bullets))))

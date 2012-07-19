@@ -4,4 +4,6 @@
                  [org.lwjgl/lwjgl "2.7.1"]
                  [org.lwjgl/lwjgl-util "2.7.1"]
                  [org.lwjgl/lwjgl-native-platform "2.7.1"]]
-  :main hyperspace.main)
+  :plugins [[lein-swank "1.4.4"]]
+  :main hyperspace.main
+  :warn-on-reflection true)
