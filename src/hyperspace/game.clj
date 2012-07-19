@@ -4,6 +4,7 @@
                     world)))
 
 (def max-bullets 30)
+(def max-bullet-distance 3000)
 
 (defn get-player
   [world name]
@@ -38,27 +39,30 @@
 
 (defn destroy-bullet?
   [bullet planets]
-  (let [bullet-center (:center bullet)]
-    (some (fn [{planet-radius :radius
-                planet-center :center}]
-            (<= (point-distance bullet-center
-                                planet-center)
-                planet-radius))
-          planets)))
+  (or
+   (> (:distance bullet) max-bullet-distance)
+   (let [bullet-center (:center bullet)]
+     (some (fn [{planet-radius :radius
+                 planet-center :center}]
+             (<= (point-distance bullet-center
+                                 planet-center)
+                 planet-radius))
+           planets))))
 
 (defn update-bullet
   [bullet planets]
   (if-not (bullet-alive? bullet)
     bullet
     (let [acceleration (get-acceleration bullet planets)
-          {position :center
-           velocity :velocity
-           traces :traces} bullet]
+          {:keys [center velocity traces distance]} bullet
+          new-center (move-point center velocity)
+          dd (point-distance center new-center)]
       (assoc bullet
-        :center   (move-point position velocity)
+        :center   new-center
         :velocity (vector-sum velocity acceleration)
         :status   (if (destroy-bullet? bullet planets) :dead :alive)
-        :traces   (conj traces position)))))
+        :traces   (conj traces new-center)
+        :distance (+ distance dd)))))
 
 (defn update-world-tick
   "Simulate one step. Return new world and (dec time)"
