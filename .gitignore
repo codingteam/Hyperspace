@@ -6,6 +6,10 @@
 /.lein-failures
 /checkouts
 /.lein-deps-sum
+/target
+*#
+*~
+*.swp
 
 .idea
 out
