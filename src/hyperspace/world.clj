@@ -1,7 +1,7 @@
 (ns hyperspace.world
   (:use [clojure.pprint :only (pprint)]
         [clojure.java.io :only (reader writer)]
-        [hyperspace.misc]))
+        [hyperspace geometry misc]))
 
 (def missile-radius 5)
 (def player-radius 15)
@@ -10,6 +10,14 @@
 (def amount-of-planets 3)
 (def amount-of-players 2)
 (def amount-of-missiles 0)
+
+
+(defn generate-without-intersection
+  "Genereate new object (player, planet etc). fgen should be 0-arity function" 
+  [{:keys [planets] :as world} fgen]
+  (first
+   (remove #(circle-X-any-circle? % planets)
+           (repeatedly fgen))))
 
 ;;; Planets related stuff
 
@@ -21,7 +29,7 @@
    :mass (* (Math/sqrt radius)
             (Math/pow 10 7))})
 
-(defn add-random-planet
+(defn generate-random-planet
   [{planets         :planets
     [x, y]          :position
     [width, height] :size
@@ -29,8 +37,12 @@
   (let [radius (-> (min width height) (/ 5) rand)
         x      (rand-range (+ x radius) (- (+ x width) radius))
         y      (rand-range (+ y radius) (- (+ y height) radius))]
-    (assoc world
-      :planets (conj planets (make-planet [x, y] radius)))))
+    (make-planet [x y] radius)))
+
+(defn add-random-planet
+  [world]
+  (let [p (generate-without-intersection world (partial generate-random-planet world))]
+    (update-in world [:planets] conj p)))
 
 (defn generate-planets
   [world]
@@ -79,15 +91,19 @@
    :heading heading
    :radius player-radius})
 
-(defn add-random-player
+(defn generate-random-player
   [{[x, y]          :position
     [width, height] :size
     players         :players
     :as world}]
   (let [x (rand-range (+ x player-radius) (- (+ x width) player-radius))
         y (rand-range (+ y player-radius) (- (+ y height) player-radius))]
-    (assoc world
-      :players (conj players (make-player [x, y] [0, 3.0])))))
+    (make-player [x y] [0 3.0])))
+
+(defn add-random-player
+  [world]
+  (let [player (generate-without-intersection world (partial generate-random-player world))]
+    (update-in world [:players] conj player)))
 
 (defn generate-players
   [world]
