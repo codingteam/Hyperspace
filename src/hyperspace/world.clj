@@ -13,7 +13,7 @@
 
 
 (defn generate-without-intersection
-  "Genereate new object (player, planet etc). fgen should be 0-arity function" 
+  "Generates new object (player, planet etc). fgen should be 0-arity function"
   [{:keys [planets] :as world} fgen]
   (first
    (remove #(circle-X-any-circle? % planets)
