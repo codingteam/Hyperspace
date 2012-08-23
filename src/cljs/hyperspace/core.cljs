@@ -13,10 +13,6 @@
 ; TODO: process keys
   world)
 
-(defn webgl-init
-  [context]
-  )
-
 (defn webgl-loop
   [canvas context initial-world]
   (def timestamp-atom         (atom (get-time)))
@@ -31,7 +27,6 @@
           [new-world remaining-time] (game/update-world world delta-time)
           final-world (process-input new-world)]
       (render/render-world context final-world)
-      (webgl/update context)
       (reset! timestamp-atom        new-timestamp)
       (reset! accumulated-time-atom remaining-time)
       (reset! world-atom            final-world))
@@ -44,5 +39,5 @@
         (let [canvas  (.getElementById js/document "canvas")
               context (webgl/get-context canvas)
               world   (world/generate-world 800 600)]
-          (webgl-init context)
+          (webgl/init context)
           (webgl-loop canvas context world))))
