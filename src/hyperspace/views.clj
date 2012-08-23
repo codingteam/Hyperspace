@@ -14,7 +14,8 @@
   (html5
     [:head
       [:title "Hyperspace"]
-      (include-clojurescript "/js/main.js")]
+      (include-clojurescript "/js/main.js")
+      [:script {:src "http://greggman.github.com/webgl-fundamentals/webgl/resources/webgl-utils.js"}]]
     [:body
       [:h1 "Hyperspace"]
       [:canvas {:id "canvas"

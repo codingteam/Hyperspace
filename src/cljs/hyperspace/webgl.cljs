@@ -6,8 +6,7 @@
 
 (defn clear
   [context]
-;  (GL11/glClear GL11/GL_COLOR_BUFFER_BIT)
-  )
+  (.clear context (.-COLOR_BUFFER_BIT context)))
 
 (defn update
   [context]
