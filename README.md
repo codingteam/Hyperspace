@@ -6,3 +6,5 @@ Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clo
 Use `lein run` to run the game.
 
 `lein midje` will run some tests.
+
+# Protocol
