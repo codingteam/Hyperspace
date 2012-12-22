@@ -30,13 +30,13 @@
        (vector-length [10, 10]) => (almost= 14.142135623730951)
        (vector-length [1.23, 10.32]) => (almost= 10.393040940937354))
 
-(facts "about normilize-vector function"
-       (cartesian->polar (normilize-vector [10, 10]))
+(facts "about normalize-vector function"
+       (cartesian->polar (normalize-vector [10, 10]))
        =>
        (just [(almost= (-> [10, 10] cartesian->polar first))
               (almost= 1.0)])
 
-       (cartesian->polar (normilize-vector [1.23, 10.32]))
+       (cartesian->polar (normalize-vector [1.23, 10.32]))
        =>
        (just [(almost= (-> [1.23, 10.32] cartesian->polar first))
               (almost= 1.0)]))
