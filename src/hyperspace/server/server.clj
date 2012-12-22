@@ -40,7 +40,7 @@
   message)
 
 (defn socket-handler [server input output]
-  (println "Incoming socket connection")
+  (println "Incoming socket connection.")
   (binding [*in* (io/reader input)
             *out* (io/writer output)
             *err* (io/writer System/err)]
@@ -56,6 +56,7 @@
               (recur))))))))
 
 (defn start [port]
+  (println "Creating server...")
   (let [server (new-server)]
-    (println "Starting server...")
+    (println "Listening on port" port)
     (socket/create-server (Integer. port) (partial socket-handler server))))
