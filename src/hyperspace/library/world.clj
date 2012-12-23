@@ -14,7 +14,7 @@
   "Generates new object (player, planet etc). fgen should be 0-arity function"
   [{:keys [planets] :as world} fgen]
   (first
-   (remove #(circle-X-any-circle? % planets)
+   (remove #(circle-X-any-circle % planets)
            (repeatedly fgen))))
 
 ;;; Planets related stuff
@@ -47,46 +47,14 @@
   (-> (iterate add-random-planet world)
       (nth amount-of-planets)))
 
-;;; Missles related stuff
-
-(defn make-missile
-  [position velocity trace-index]
-
-  {:position position
-   :velocity velocity
-   :radius missile-radius
-   :mass missile-mass
-   :trace-index trace-index})
-
-(defn add-missile
-  [{missiles :missiles
-    traces   :traces
-    :as world}
-   position velocity]
-  (let [new-missile (make-missile position
-                                  velocity
-                                  (count traces))]
-    (assoc world
-      :missiles (conj missiles new-missile)
-      :traces (conj traces []))))
-
-;;; Fragments related stuff
-
-(defn make-fragment
-  [position velocity radius]
-
-  {:position position
-   :velocity velocity
-   :radius radius
-   :mass radius})
-
 ;;; Players related stuff
 
 (defn make-player
-  [position heading]
+  [position]
 
   {:position position
-   :radius player-radius})
+   :radius player-radius
+   :status :alive})
 
 (defn generate-random-player
   [{[x, y]          :position
@@ -95,7 +63,7 @@
     :as world}]
   (let [x (rand-range (+ x player-radius) (- (+ x width) player-radius))
         y (rand-range (+ y player-radius) (- (+ y height) player-radius))]
-    (make-player [x y] [0 3.0])))
+    (make-player [x y])))
 
 (defn add-random-player
   [world]
@@ -109,15 +77,19 @@
 
 ;;; World related stuff
 
+(defn create [width height]
+  "Create empty world."
+  {:position [0, 0]
+   :size [width, height]
+   :players []
+   :planets ()
+   :missiles ()
+   :fragments ()
+   :traces []
+   :exit false})
+
 (defn generate
   [width height]
-  (->> {:position [0, 0]
-        :size [width, height]
-        :players []
-        :planets ()
-        :missiles ()
-        :fragments ()
-        :traces []
-        :exit false}
+  (->> (create width height)
        generate-players
        generate-planets))

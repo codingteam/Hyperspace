@@ -1,9 +1,9 @@
 (ns hyperspace.library.geometry)
 
-(def
-  ^{:arglists '([vtr & vtrs])
-    :doc "Returns the sum of vectors."}
-  vector-sum (partial mapv +))
+(defn vector-sum
+  "Returns the sum of vectors."
+  [& vectors]
+  (apply (partial mapv +) vectors))
 
 (def
   ^{:arglists '([vtr & vtrs])
@@ -53,10 +53,11 @@
   (<= (distance position1 position2)
       (+ radius1 radius2)))
 
-(defn circle-X-any-circle?
-  "Does the circle intersects any other circles?"
+(defn circle-X-any-circle
+  "Returns the first circle the specified circle intersects with."
   [circle other-circles]
-  (some #(circle-X-circle? % circle) other-circles))
+  (println "circle-X-any-circle" circle other-circles)
+  (some (fn [c] (if (circle-X-circle? c circle) c nil)) other-circles))
 
 (defn circle-X-rectangle?
   "Does the circle intersects the rectangle?"

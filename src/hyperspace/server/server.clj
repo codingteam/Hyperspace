@@ -4,9 +4,9 @@
             [clojure.java.io :as io]
             [hyperspace.server.game :as game]))
 
-(def +players-in-game+ 2)
-(def +width+ 1024)
-(def +height+ 768)
+(def players-in-game 2)
+(def width 1024)
+(def height 768)
 
 (defn new-server []
   (ref {:games {} :last-player-id 0}))
@@ -15,10 +15,10 @@
   (dosync
     (let [games-map (:games @server)
           free-game (-> games-map
-        (filter #(< (val %) +players-in-game+))
+        (filter #(< (val %) players-in-game))
         (first))]
       (if (= free-game nil)
-        [(game/new +width+ +height+) 0]
+        [(game/create width height) 0]
         free-game))))
 
 (defn create-player [server]
