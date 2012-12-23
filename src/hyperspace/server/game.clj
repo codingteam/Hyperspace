@@ -3,9 +3,9 @@
             [hyperspace.library.world :as world]))
 
 (defn new [width height]
-  (agent {:player-ids []
+  (agent {:player-ids #{}
           :world (world/generate width height)
-          :turns []}))
+          :turns {}}))
 
 (defn add-player [game player-id]
   (send game (fn [game]
@@ -13,22 +13,22 @@
                  (assoc game
                    :player-ids (conj players player-id))))))
 
-(defn add-turn [game player-id turn]
-  (send game (fn [game]
-               (let [players (:player-ids game)
-                     turns   (conj (:turns game) turn)]
-                 (if (= (count turns)
-                        (count players))
-                   (let [world (:world game)
-                         player (first :players world)] ; TODO: get proper player; not first
-                     (game/fire world player)
-                     (let [world (game/instant-update-world world)]
-                       (assoc game
-                         :world world
-                         :turns [])))
-                   (assoc game
-                     :turns turns))))))
+(defn add-turn
+  "Accepts game, player id and turn. Turn is a map {:heading rad, :power p}"
+  [game player-id turn]
+  (send game
+    (fn [game]
+      (let [players (:player-ids game)
+            turns   (:turns game)]
+        (if (contains? players player-id)
+          (assoc game
+            :turns (assoc turns
+                     player-id turn))
+          (do
+            (println "Attempt to make turn from non-existent player" player-id)
+            game))))))
 
 (defn get-state [game]
   ;; TODO: block thread until turns != []
+  ;; TODO: apply turns
   (:world @game))

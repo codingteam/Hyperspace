@@ -9,8 +9,6 @@
 
 (def amount-of-planets 3)
 (def amount-of-players 2)
-(def amount-of-missiles 0)
-
 
 (defn generate-without-intersection
   "Generates new object (player, planet etc). fgen should be 0-arity function"
@@ -88,7 +86,6 @@
   [position heading]
 
   {:position position
-   :heading heading
    :radius player-radius})
 
 (defn generate-random-player
