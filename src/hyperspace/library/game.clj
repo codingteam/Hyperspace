@@ -1,5 +1,5 @@
-(ns hyperspace.game
-  (:use [hyperspace world geometry gravity misc]))
+(ns hyperspace.library.game
+  (:use [hyperspace.library world geometry gravity misc]))
 
 (defn turn-right
   [{[player & _] :players
@@ -137,3 +137,9 @@
           :fragments new-fragments
           :traces new-traces)
         (- delta-time simulation-step)))))
+
+(defn instant-update-world
+  "Updates the world until state stabilizes, e.g. all missiles are exploded."
+  [world]
+  ;; TODO: invent something more optimal
+  (update-world world 100000))

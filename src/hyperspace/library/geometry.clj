@@ -1,4 +1,4 @@
-(ns hyperspace.geometry)
+(ns hyperspace.library.geometry)
 
 (def
   ^{:arglists '([vtr & vtrs])

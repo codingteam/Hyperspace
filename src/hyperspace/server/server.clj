@@ -5,6 +5,8 @@
             [hyperspace.server.game :as game]))
 
 (def +players-in-game+ 2)
+(def +width+ 1024)
+(def +height+ 768)
 
 (defn new-server []
   (ref {:games {} :last-player-id 0}))
@@ -16,7 +18,7 @@
         (filter #(< (val %) +players-in-game+))
         (first))]
       (if (= free-game nil)
-        [(game/new) 0]
+        [(game/new +width+ +height+) 0]
         free-game))))
 
 (defn create-player [server]

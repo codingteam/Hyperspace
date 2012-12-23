@@ -1,7 +1,7 @@
-(ns hyperspace.world
+(ns hyperspace.library.world
   (:use [clojure.pprint :only (pprint)]
         [clojure.java.io :only (reader writer)]
-        [hyperspace geometry misc]))
+        [hyperspace.library geometry misc]))
 
 (def missile-radius 5)
 (def player-radius 15)
@@ -112,7 +112,7 @@
 
 ;;; World related stuff
 
-(defn generate-world
+(defn generate
   [width height]
   (->> {:position [0, 0]
         :size [width, height]

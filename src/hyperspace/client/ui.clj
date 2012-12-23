@@ -2,7 +2,7 @@
   (:import [org.lwjgl Sys]
            [org.lwjgl.opengl Display DisplayMode GL11]
            [org.lwjgl.input Mouse Keyboard])
-  (:use [hyperspace world geometry game]))
+  (:use [hyperspace.library world geometry game]))
 
 (def window-width 800)
 (def window-height 600)

@@ -1,4 +1,4 @@
-(ns hyperspace.misc)
+(ns hyperspace.library.misc)
 
 (defn rand-range
   "Returns a random integer between low (inclusive) and
