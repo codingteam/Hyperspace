@@ -7,5 +7,7 @@
     (let [game (game/new 800 600)]
       (game/add-player game "player1")
       (await game)
-      (let [players (:player-ids @game)]
-        (is (= players ["player1"]) "added player identifier is equal to source")))))
+      (is (= (:player-ids @game) ["player1"]) "added player identifier is equal to source")
+      (game/add-player game "player2")
+      (await game)
+      (is (= (:player-ids @game) ["player1" "player2"]) "player 2 identifier is equal to source"))))
