@@ -1,6 +1,6 @@
 (ns hyperspace.main
-  (:use [hyperspace.client :as client]
-        [hyperspace.server :as server]))
+  (:require [hyperspace.client.main :as client]
+            [hyperspace.server.main :as server]))
 
 (defn -main [application & args]
   (cond

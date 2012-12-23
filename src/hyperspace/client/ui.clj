@@ -1,8 +1,9 @@
-(ns hyperspace.ui
+(ns hyperspace.client.ui
   (:import [org.lwjgl Sys]
            [org.lwjgl.opengl Display DisplayMode GL11]
            [org.lwjgl.input Mouse Keyboard])
-  (:use [hyperspace.library world geometry game]))
+  (:use [hyperspace.library geometry simulation world]
+        [hyperspace.client controls richworld]))
 
 (def window-width 800)
 (def window-height 600)
@@ -149,7 +150,7 @@
         (Display/sync fps)
         (recur new-timestamp remaining-time final-world)))))
 
-(defn start-ui
+(defn start
   [world]
   (setup-ui world)
   (ui-loop world))

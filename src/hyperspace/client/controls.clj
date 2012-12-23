@@ -1,4 +1,5 @@
-(ns hyperspace.client.controls)
+(ns hyperspace.client.controls
+  (:require [hyperspace.library.misc :as misc]))
 
 (defn turn-right
   [{[player & _] :players
@@ -23,7 +24,7 @@
   (let [power (get-in world [:players 0 :heading 1])]
     (assoc-in world
       [:players 0 :heading 1]
-      (saturation (+ power delta-power)
+      (misc/saturation (+ power delta-power)
         1 10))))
 
 (defn decrease-power
@@ -31,7 +32,7 @@
   (let [power (get-in world [:players 0 :heading 1])]
     (assoc-in world
       [:players 0 :heading 1]
-      (saturation (- power delta-power)
+      (misc/saturation (- power delta-power)
         1 10))))
 
 (defn exit [world]

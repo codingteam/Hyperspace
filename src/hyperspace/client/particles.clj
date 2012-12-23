@@ -1,4 +1,13 @@
-(ns hyperspace.client.particles)
+(ns hyperspace.client.particles
+  (:use [hyperspace.library geometry]))
+
+(defn make-fragment
+  [position velocity radius]
+
+  {:position position
+   :velocity velocity
+   :radius radius
+   :mass radius})
 
 (defn update-traces
   [traces

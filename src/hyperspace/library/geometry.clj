@@ -46,6 +46,11 @@
   [p1 p2]
   (vector-length (vector-subtract p1 p2)))
 
+(defn heading
+  "Returns the heading from point1 to point2 in radians."
+  [point1 point2]
+  (Math/atan2 (- (second point2) (second point1)) (- (first point2) (first point1))))
+
 (defn circle-X-circle?
   "Does the first circle intersects the second one?"
   [{position1 :position radius1 :radius}

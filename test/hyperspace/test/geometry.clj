@@ -1,5 +1,5 @@
 (ns hyperspace.test.geometry
-  (:use [hyperspace.geometry]
+  (:use [hyperspace.library.geometry]
         [hyperspace.test.checkers]
         [midje.sweet]))
 
@@ -44,6 +44,10 @@
 (facts "about distance function"
        (distance [0, 0] [10, 10]) => (almost= (vector-length [10, 10]))
        (distance [34, 12] [-24, 42]) => (almost= 65.29931086925804))
+
+(facts "about heading function"
+  (heading [0 0] [1 1]) => (almost= (/ Math/PI 4))
+  (heading [0 0] [1 0]) => (almost= 0))
 
 ;; (facts "about circle-X-circle? function"
 ;;        (circle-X-circle? {:position [0, 0],     :radius 10}

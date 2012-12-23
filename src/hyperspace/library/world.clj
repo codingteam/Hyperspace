@@ -89,6 +89,7 @@
    :exit false})
 
 (defn generate
+  "Generate random world of specified size."
   [width height]
   (->> (create width height)
        generate-players

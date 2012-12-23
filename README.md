@@ -13,8 +13,7 @@ Use `lein run server` to run game server.
 
 # Testing
 
-1. `lein midje` will run unit tests.
-2. `lein test` will run the integration tests.
+`lein midje` will run all the tests.
 
 # Protocol
 

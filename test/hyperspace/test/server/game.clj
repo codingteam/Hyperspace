@@ -1,7 +1,8 @@
 (ns hyperspace.test.server.game
   (:use clojure.test)
-  (:require [hyperspace.server.game :as game]
-            [hyperspace.library.world :as world]))
+  (:require [hyperspace.library.geometry :as geometry]
+            [hyperspace.library.world :as world]
+            [hyperspace.server.game :as game]))
 
 (defn set-world
   "Set the world for game."
@@ -64,7 +65,24 @@
                                     :status :dead)]) "player 2 should be dead")
         (is (= targets [nil player2]))))))
 
+(deftest planet-shot-test
+  (let [game (game/create 800 600)
+        world (:world @game)
+        player1id "player1"
+        player2id "player2"
+        planet (first (:planets world))
+        players (:players world)
+        player1 (first players)
+        player2 (second players)
+        turn1 {:heading (geometry/heading player1 planet)
+               :power 5}]
+    (game/add-player game player1id)
+    (game/add-player game player2id)
+    (await game)
+    (let [[world1 targets] (game/process-turn @game [world []] [player1id turn1])]
+      (is (= world1 world) "world should not change")
+      (is (= targets [planet])))))
+
 ;;; TODO: game/process-turn tests:
-;;; 1) shot into planet;
-;;; 2) shot into enemy;
-;;; 3) shot into space.
+;;; 1) shot into enemy;
+;;; 2) shot into space.
