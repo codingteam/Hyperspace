@@ -63,3 +63,8 @@
                                   (assoc player2
                                     :status :dead)]) "player 2 should be dead")
         (is (= targets [nil player2]))))))
+
+;;; TODO: game/process-turn tests:
+;;; 1) shot into planet;
+;;; 2) shot into enemy;
+;;; 3) shot into space.
