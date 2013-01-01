@@ -1,4 +1,4 @@
-(ns hyperspace.test.geometry
+(ns hyperspace.test.library.geometry
   (:use [hyperspace.library.geometry]
         [hyperspace.test.checkers]
         [midje.sweet]))
