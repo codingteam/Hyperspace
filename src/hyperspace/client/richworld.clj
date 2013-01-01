@@ -8,12 +8,8 @@
 
 (defn make-missile
   [position velocity trace-index]
-
-  {:position position
-   :velocity velocity
-   :radius world/missile-radius
-   :mass world/missile-mass
-   :trace-index trace-index})
+  (assoc (world/make-missile position velocity)
+    :trace-index trace-index))
 
 (defn add-missile
   [{missiles :missiles

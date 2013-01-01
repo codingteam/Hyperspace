@@ -75,6 +75,15 @@
   (-> (iterate add-random-player world)
       (nth amount-of-players)))
 
+;;; Missile related stuff:
+(defn make-missile
+  "Makes a missile object."
+  [position velocity]
+  {:position position
+   :velocity velocity
+   :radius   missile-radius
+   :mass     missile-mass})
+
 ;;; World related stuff
 
 (defn create [width height]

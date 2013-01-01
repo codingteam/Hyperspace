@@ -2,8 +2,9 @@
   (:import [org.lwjgl Sys]
            [org.lwjgl.opengl Display DisplayMode GL11]
            [org.lwjgl.input Mouse Keyboard])
-  (:use [hyperspace.library geometry simulation world]
-        [hyperspace.client controls richworld]))
+  (:use [hyperspace.library geometry simulation]
+        [hyperspace.client controls richworld])
+  (:require [hyperspace.library.world :as world]))
 
 (def window-width 800)
 (def window-height 600)
