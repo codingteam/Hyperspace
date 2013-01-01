@@ -1,4 +1,5 @@
-(ns hyperspace.library.geometry)
+(ns hyperspace.library.geometry
+  (:use clojure.tools.logging))
 
 (defn vector-sum
   "Returns the sum of vectors."
@@ -61,7 +62,7 @@
 (defn circle-X-any-circle
   "Returns the first circle the specified circle intersects with."
   [circle other-circles]
-  (println "circle-X-any-circle" circle other-circles)
+  (trace "circle-X-any-circle" circle other-circles)
   (some (fn [c] (if (circle-X-circle? c circle) c nil)) other-circles))
 
 (defn circle-X-rectangle?

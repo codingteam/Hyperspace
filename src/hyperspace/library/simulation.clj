@@ -1,5 +1,6 @@
 (ns hyperspace.library.simulation
-  (:use [hyperspace.library geometry gravity])
+  (:use clojure.tools.logging
+        [hyperspace.library geometry gravity])
   (:require [hyperspace.library.world :as world]))
 
 (def simulation-step 10)
@@ -10,7 +11,7 @@
   [{players :players
     :as world}
    player]
-  (println "Killing player" player)
+  (debug "Killing player" player)
   (assoc world
     :players (replace {player (assoc player
                                 :status :dead)} players)))
@@ -22,7 +23,7 @@
     :as particle}
    planets
    delta-time]
-  (println "planets" planets)
+  (trace "update-particle" particle planets delta-time)
   (let [acceleration (apply vector-sum
                             (conj (map #(gravity-acceleration particle %)
                                        planets)
@@ -45,23 +46,16 @@
    player
    heading
    power]
-  (println "simulation/fire" world player heading power)
-  (println "players1" players)
+  (trace "fire" world player heading power)
   (loop [bullet {:position (:position player)
                  :velocity [(* (Math/cos heading) power)
                             (* (Math/sin heading) power)]
                  :radius world/missile-radius
                  :mass world/missile-mass}
          counter 0]
-    (println "players2" players)
     (let [bullet (update-particle bullet planets simulation-step)
           planet (circle-X-any-circle bullet planets)
           player (circle-X-any-circle bullet players)]
-      (println "players3" players)
-      (println "planets" planets)
-      (println "bullet" bullet)
-      (println "planet" planet)
-      (println "player" player)
       (cond
         (> counter max-cycle) [world nil]
         planet [world (:position planet)]

@@ -1,11 +1,12 @@
 (ns hyperspace.server.game
+  (:use clojure.tools.logging)
   (:require [hyperspace.library.simulation :as simulation]
             [hyperspace.library.world :as world]))
 
 (defn get-player-by-id
   "Finds game player by its identifier."
   [game player-id]
-  (println "searching player" player-id "in" game)
+  (debug "searching player" player-id "in" game)
   (let [index (->> (:player-ids game)
                    (map-indexed vector)
                    (some (fn [[i p]] (if (= p player-id) i nil))))
@@ -17,7 +18,7 @@
   [game [world targets] [player-id {heading :heading
                                     power :power
                                     :as turn}]]
-  (println "processing turn" turn)
+  (debug "processing turn" turn)
   (let [player (get-player-by-id game player-id)
         [world target] (simulation/fire world player heading power)]
     [world (conj targets target)]))
@@ -49,7 +50,7 @@
             :turns (assoc turns
                      player-id turn))
           (do
-            (println "Attempt to make turn from non-existent player" player-id)
+            (warn "Attempt to make turn from non-existent player" player-id)
             game))))))
 
 (defn get-state [game]
@@ -60,12 +61,12 @@
       (recur)))
   (send game
     (fn [game]
-      (println "Turn processing...")
-      (println "game:" game)
+      (debug "Turn processing...")
+      (trace "game:" game)
       (let [[world targets] (reduce (partial process-turn game)
                                     [(:world game) []]
                                     (:turns game))]
-        (println "world" world)
+        (trace "world" world)
         (assoc game
           :world world
           :targets targets))))

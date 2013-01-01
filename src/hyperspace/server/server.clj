@@ -1,4 +1,5 @@
 (ns hyperspace.server.server
+  (:use clojure.tools.logging)
   (:require [clojure.contrib.server-socket :as socket]
             [clojure.data.json :as json]
             [clojure.java.io :as io]
@@ -42,7 +43,7 @@
   message)
 
 (defn socket-handler [server input output]
-  (println "Incoming socket connection.")
+  (info "Incoming socket connection.")
   (binding [*in* (io/reader input)
             *out* (io/writer output)
             *err* (io/writer System/err)]
@@ -58,7 +59,7 @@
               (recur))))))))
 
 (defn start [port]
-  (println "Creating server...")
+  (info "Creating server...")
   (let [server (new-server)]
-    (println "Listening on port" port)
+    (info "Listening on port" port)
     (socket/create-server (Integer. port) (partial socket-handler server))))
