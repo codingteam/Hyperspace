@@ -12,3 +12,6 @@
 (facts "about kill-player function"
   (kill-player world-fixture player-fixture) => (assoc world-fixture :players [(assoc player-fixture :status :dead)])
   (kill-player world-fixture nonexistent-player-fixture) => world-fixture)
+
+;;; TODO: Test the update-particle function.
+;;; TODO: Test the fire function.
