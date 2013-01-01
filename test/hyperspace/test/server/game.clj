@@ -74,7 +74,7 @@
         players (:players world)
         player1 (first players)
         player2 (second players)
-        turn1 {:heading (geometry/heading player1 planet)
+        turn1 {:heading (geometry/heading (:position player1) (:position planet))
                :power 5}]
     (game/add-player game player1id)
     (game/add-player game player2id)
