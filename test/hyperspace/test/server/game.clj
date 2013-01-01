@@ -83,6 +83,25 @@
       (is (= world1 world) "world should not change")
       (is (= targets [planet])))))
 
+(deftest player-shot-test
+  (let [game (game/create 800 600)
+        world (:world @game)
+        player1id "player1"
+        player2id "player2"
+        planet (first (:planets world))
+        players (:players world)
+        player1 (first players)
+        player2 (second players)
+        turn1 {:heading (geometry/heading (:position player1) (:position player2))
+               :power 5}]
+    (game/add-player game player1id)
+    (game/add-player game player2id)
+    (await game)
+    (let [[world1 targets] (game/process-turn @game [world []] [player1id turn1])]
+      (is (= (second (:players world1))
+             (assoc player2
+               :status :dead)) "player2 should be dead")
+      (is (= targets [player2])))))
+
 ;;; TODO: game/process-turn tests:
-;;; 1) shot into enemy;
-;;; 2) shot into space.
+;;; - shot into space.
