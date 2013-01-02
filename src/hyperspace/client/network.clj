@@ -12,12 +12,12 @@
   [connection]
   nil)
 
-(defn send
+(defn send-message
   "Serializes and sends the message to the server."
   [connection message]
   nil)
 
-(defn receive
+(defn receive-message
   "Waits for the next message from server, deserializes and returns it."
   [connetion timeout]
   nil)
