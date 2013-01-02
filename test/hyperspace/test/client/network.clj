@@ -5,11 +5,13 @@
   (:use [hyperspace.client.network]
         [hyperspace.test.checkers]
         [midje.sweet])
-  (:require [clojure.contrib.server-socket :as socket]))
+  (:require [clojure.contrib.server-socket :as socket]
+            [clojure.data.json :as json]
+            [clojure.java.io :as io]))
 
-(def test-server-port 10501)
-(def server-fake (socket/create-server
-                   test-server-port
+(def fake-server-port 10501)
+(def fake-server (socket/create-server
+                   fake-server-port
                    (fn [in out]
                      (binding [*in*  (BufferedReader. (InputStreamReader. in))
                                *out* (PrintWriter. out)]
@@ -17,7 +19,7 @@
                          (println (read-line))
                          (recur))))))
 
-(let [connection (connect "localhost" test-server-port)]
+(let [connection (connect "localhost" fake-server-port)]
   (facts "about connect function"
     (:socket connection) => truthy
     (:in connection) => truthy
@@ -25,10 +27,27 @@
     (.isClosed (:socket connection)) => false)
   (disconnect connection))
 
-(let [connection (connect "localhost" test-server-port)]
+(let [connection (connect "localhost" fake-server-port)]
   (disconnect connection)
   (facts "about disconnect function"
     (.isClosed (:socket connection)) => true))
 
-;;; TODO: test the send-message function.
+(def answer (promise))
+(def mock-server-port 10502)
+(def mock-server (socket/create-server
+                   mock-server-port
+                   (fn [in out]
+                     (let [reader (io/reader in)
+                           writer (io/writer out)]
+                       (loop []
+                         (let [message (json/read reader :key-fn keyword)]
+                           (deliver answer message))
+                         (recur))))))
+
+(let [connection (connect "localhost" mock-server-port)
+      object {:test 1, :field "2"}]
+  (send-message connection object)
+  (facts "about send-message function"
+    (deref answer 15000 nil) => object))
+
 ;;; TODO: test the receive-message function.
