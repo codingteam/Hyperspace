@@ -21,9 +21,14 @@
   (facts "about connect function"
     (:socket connection) => truthy
     (:in connection) => truthy
-    (:out connection) => truthy)
+    (:out connection) => truthy
+    (.isClosed (:socket connection)) => false)
   (disconnect connection))
 
-;;; TODO: test the disconnect function.
+(let [connection (connect "localhost" test-server-port)]
+  (disconnect connection)
+  (facts "about disconnect function"
+    (.isClosed (:socket connection)) => true))
+
 ;;; TODO: test the send-message function.
 ;;; TODO: test the receive-message function.
