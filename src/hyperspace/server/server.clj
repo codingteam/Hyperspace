@@ -50,12 +50,12 @@
     (let [[game player-id] (create-player server)]
       (game/add-player game player-id)
       (loop []
+        (let [state (game/get-state game)]
+          (send-message state))
         (let [message (get-message)]
           (if (not (:exit message))
             (let [turn (prepare-turn message)]
               (game/add-turn game player-id turn)
-              (let [state (game/get-state game)]
-                (send-message state))
               (recur))))))))
 
 (defn start [port]
