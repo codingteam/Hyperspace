@@ -14,7 +14,7 @@
 (defn disconnect
   "Drops the connection to server."
   [connection]
-  nil)
+  (.close (:socket connection)))
 
 (defn send-message
   "Serializes and sends the message to the server."
