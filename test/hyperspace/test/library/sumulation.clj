@@ -43,4 +43,7 @@
     ;; TODO: test with time > 1
     ))
 
-;;; TODO: Test the fire function.
+(facts "about fire function"
+  ;; TODO: test shot to player
+  ;; TODO: test shot to planet
+  (fire world-fixture player-fixture 0 10) => [world-fixture nil])
