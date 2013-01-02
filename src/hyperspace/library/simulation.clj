@@ -41,23 +41,25 @@
 (defn fire
   "Produces the world state resulted from player fire."
   [{planets :planets
-    players :players
     :as world}
    player
    heading
    power]
   (trace "fire" world player heading power)
-  (loop [bullet {:position (:position player)
-                 :velocity [(* (Math/cos heading) power)
-                            (* (Math/sin heading) power)]
-                 :radius world/missile-radius
-                 :mass world/missile-mass}
-         counter 0]
-    (let [bullet (update-particle bullet planets simulation-step)
-          planet (circle-X-any-circle bullet planets)
-          player (circle-X-any-circle bullet players)]
-      (cond
-        (> counter max-cycle) [world nil]
-        planet [world (:position planet)]
-        player [(kill-player world player) (:position planet)]
-        :else (recur bullet (+ counter 1))))))
+  (let [players (->> world
+                     :players
+                     (remove #(= % player)))]
+    (loop [bullet {:position (:position player)
+                   :velocity [(* (Math/cos heading) power)
+                              (* (Math/sin heading) power)]
+                   :radius world/missile-radius
+                   :mass world/missile-mass}
+           counter 0]
+      (let [bullet (update-particle bullet planets simulation-step)
+            planet (circle-X-any-circle bullet planets)
+            player (circle-X-any-circle bullet players)]
+        (cond
+          (> counter max-cycle) [world nil]
+          planet [world (:position planet)]
+          player [(kill-player world player) (:position planet)]
+          :else (recur bullet (+ counter 1)))))))
