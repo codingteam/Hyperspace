@@ -1,11 +1,15 @@
-(ns hyperspace.client.network)
+(ns hyperspace.client.network
+  (:import java.net.Socket))
 
 (defn connect
   "Connects to the server, returns object that can be used to interact with network."
   [host port]
-  {:socket nil
-   :in     nil
-   :out    nil})
+  (let [socket (Socket. host port)
+        in     (.getInputStream socket)
+        out    (.getOutputStream socket)]
+    {:socket socket
+     :in     in
+     :out    out}))
 
 (defn disconnect
   "Drops the connection to server."
