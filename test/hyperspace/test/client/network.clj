@@ -48,6 +48,7 @@
       object {:test 1, :field "2"}]
   (send-message connection object)
   (facts "about send-message function"
-    (deref answer 15000 nil) => object))
+    (deref answer 15000 nil) => object)
+  (disconnect connection))
 
 ;;; TODO: test the receive-message function.

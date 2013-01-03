@@ -1,5 +1,7 @@
 (ns hyperspace.client.network
-  (:import java.net.Socket))
+  (:import java.net.Socket)
+  (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]))
 
 (defn connect
   "Connects to the server, returns object that can be used to interact with network."
@@ -8,18 +10,22 @@
         in     (.getInputStream socket)
         out    (.getOutputStream socket)]
     {:socket socket
-     :in     in
-     :out    out}))
+     :in     (io/reader in)
+     :out    (io/writer out)}))
 
 (defn disconnect
   "Drops the connection to server."
-  [connection]
-  (.close (:socket connection)))
+  [{socket :socket
+    in     :in
+    out    :out}]
+  (.close in)
+  (.close out)
+  (.close socket))
 
 (defn send-message
   "Serializes and sends the message to the server."
-  [connection message]
-  nil)
+  [{writer :out} message]
+  (json/write message writer))
 
 (defn receive-message
   "Waits for the next message from server, deserializes and returns it."
