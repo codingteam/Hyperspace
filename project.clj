@@ -5,7 +5,7 @@
                  [org.clojars.rexim/lwjgl-platform-natives "2.8.4"]
                  [org.clojure/clojure "1.5.1"]
                  [org.clojure/clojure-contrib "1.2.0"]
-                 [org.clojure/data.json "0.2.0"]
+                 [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.lwjgl.lwjgl/lwjgl "2.8.4"]
                  [midje "1.5.0"]]
