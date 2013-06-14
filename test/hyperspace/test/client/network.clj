@@ -32,6 +32,8 @@
   (facts "about disconnect function"
     (.isClosed (:socket connection)) => true))
 
+(socket/close-server fake-server)
+
 (def answer (promise))
 (def mock-server-port 10502)
 (def mock-server (socket/create-server
@@ -50,5 +52,7 @@
   (facts "about send-message function"
     (deref answer 15000 nil) => object)
   (disconnect connection))
+
+(socket/close-server mock-server)
 
 ;;; TODO: test the receive-message function.

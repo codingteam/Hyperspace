@@ -25,7 +25,8 @@
 (defn send-message
   "Serializes and sends the message to the server."
   [{writer :out} message]
-  (json/write message writer))
+  (json/write message writer)
+  (.flush writer))
 
 (defn receive-message
   "Waits for the next message from server, deserializes and returns it."
