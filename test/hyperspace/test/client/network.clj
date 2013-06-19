@@ -32,6 +32,12 @@
   (facts "about disconnect function"
     (.isClosed (:socket connection)) => true))
 
+(let [connection (connect "localhost" fake-server-port)
+      message {:a 1, :b 2}]
+  (send-message connection message)
+  (facts "about receive-message function"
+    (receive-message connection 15000) => {:a 1, :b 2}))
+
 (socket/close-server fake-server)
 
 (def answer (promise))
@@ -54,5 +60,3 @@
   (disconnect connection))
 
 (socket/close-server mock-server)
-
-;;; TODO: test the receive-message function.
