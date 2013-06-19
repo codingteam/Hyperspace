@@ -29,6 +29,6 @@
   (.flush writer))
 
 (defn receive-message
-  "Waits for the next message from server, deserializes and returns it."
-  [connetion timeout]
-  nil)
+  "Waits for the next message from server, deserializes and returns it. nil if socket closed."
+  [{reader :in}]
+  (json/read reader :eof-error? false :key-fn keyword))

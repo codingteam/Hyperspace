@@ -32,12 +32,6 @@
   (facts "about disconnect function"
     (.isClosed (:socket connection)) => true))
 
-(let [connection (connect "localhost" fake-server-port)
-      message {:a 1, :b 2}]
-  (send-message connection message)
-  (facts "about receive-message function"
-    (receive-message connection 15000) => {:a 1, :b 2}))
-
 (socket/close-server fake-server)
 
 (def answer (promise))
@@ -57,6 +51,37 @@
   (send-message connection object)
   (facts "about send-message function"
     (deref answer 15000 nil) => object)
-  (disconnect connection))
+  (println "finished1")
+  (disconnect connection)
+  (println "finished22"))
 
 (socket/close-server mock-server)
+(println "finished23")
+
+(def echo-server-port 10503)
+(def echo-server (socket/create-server
+                   echo-server-port
+                   (fn [in out]
+                     (let [reader (io/reader in)
+                           writer (io/writer out)]
+                       (loop []
+                         (let [c (.read reader)]
+                           (if (not= c -1)
+                             (do
+                               (println "r" (char c))
+                               (.write writer c)
+                               (.flush writer)
+                               (recur)))))))))
+
+(let [connection (connect "localhost" echo-server-port)
+      message {:a 1, :b 2}]
+  (println "finished11")
+  (send-message connection message)
+  (println "finished14")
+  (facts "about receive-message function"
+    (receive-message connection) => {:a 1, :b 2})
+  (println "finished12")
+  (disconnect connection))
+
+(println "finished13")
+(socket/close-server echo-server)
