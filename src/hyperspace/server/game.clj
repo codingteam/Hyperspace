@@ -57,7 +57,6 @@
   (loop []
     (await game)
     (if (not= (count (:turns @game)) 2)
-      ;; TODO: use some cross-thread synchronization here.
       (recur)))
   (send game
     (fn [game]
