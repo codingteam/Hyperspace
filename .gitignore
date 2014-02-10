@@ -11,3 +11,5 @@
 .idea
 out
 Hyperspace.iml
+
+hyperspace-server.*.db
