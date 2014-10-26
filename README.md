@@ -12,7 +12,7 @@ Use `lein run client` to run the standalone game client.
 ## Game server
 
 ### Running
-Use `lein run server [port]` to run game server.
+Use `lein ring server` to run game server.
 
 ### Protocol
 Hyperspace protocol is very simple. All messages are transferred in the JSON format.
