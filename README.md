@@ -11,6 +11,9 @@ Use `lein run client` to run the standalone game client.
 
 ## Game server
 
+### Configuring
+All configuration data is stored in the `config.edn` file.
+
 ### Running
 Use `lein ring server` to run game server.
 

@@ -1,6 +1,6 @@
 (defproject hyperspace "1.0.0-SNAPSHOT"
   :description "Simple 2D game written in Clojure."
-  :dependencies [[com.googlecode.flyway/flyway-core "2.3"]
+  :dependencies [[clj-liquibase "0.5.2"]
                  [com.h2database/h2 "1.3.173"]
                  [log4j/log4j "1.2.17"]
                  [metosin/ring-swagger "0.13.0"]

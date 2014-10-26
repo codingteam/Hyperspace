@@ -1,7 +1,8 @@
 (ns hyperspace.swagger.server
   (:require [compojure.api.sweet :refer :all]
             [ring.util.http-response :refer :all]
-            [schema.core :as s]))
+            [schema.core :as s])
+  (:use [hyperspace.server.database.datasource :only [datasource]]))
 
 (s/defschema Total {:total Long})
 
