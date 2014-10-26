@@ -9,6 +9,6 @@
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojars.rexim/jinput-platform-natives "2.0.5"]
-                 [org.clojars.rexim/lwjgl-platform-natives "2.8.4"]
-                 [org.lwjgl.lwjgl/lwjgl "2.8.4"]]
+                 [org.ru.codingteam/lwjgl-platform-natives "2.9.1"]
+                 [org.lwjgl.lwjgl/lwjgl "2.9.1"]]
   :main hyperspace.main)
