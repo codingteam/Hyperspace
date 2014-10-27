@@ -1,8 +1,8 @@
 (ns hyperspace.swagger.server
   (:require [compojure.api.sweet :refer :all]
             [ring.util.http-response :refer :all]
-            [schema.core :as s])
-  (:use [hyperspace.server.database.datasource :only [datasource]]))
+            [schema.core :as s]
+            [hyperspace.server.database.user :as user]))
 
 (s/defschema Total {:total Long})
 
@@ -19,4 +19,5 @@
                           :query-params [login :- String
                                          password :- String]
                           :summary "register user"
-                          (ok "Not implemented"))))
+                          (user/create login password)
+                          (ok))))
