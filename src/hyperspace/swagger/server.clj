@@ -4,7 +4,8 @@
             [schema.core :as s]
             [hyperspace.server.database.user :as user]))
 
-(s/defschema Total {:total Long})
+(s/defschema User {:login String
+                   :password String})
 
 (defapi app
         (swagger-ui)
@@ -15,8 +16,16 @@
         (swaggered "user"
                    :description "user manipulation"
                    (POST* "/register" []
-                          :return String
-                          :query-params [login :- String
-                                         password :- String]
+                          :body [user User]
                           :summary "register user"
-                          (ok (user/create login password)))))
+                          (do (user/create user)
+                              (ok nil)))
+
+                   (POST* "/login" []
+                          :return String
+                          :body [user User]
+                          :summary "log in and get session token"
+                          (let [session (user/login user)]
+                            (if session
+                              (ok session)
+                              (forbidden "invalid username or password"))))))
