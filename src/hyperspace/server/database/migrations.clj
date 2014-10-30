@@ -6,7 +6,8 @@
                       "author=ForNeVeR"
                       [(ch/create-table :users
                                         [[:id :int :null false :pk true :autoinc true]
-                                         [:login [:varchar 40] :null false] ;; TODO: enforce login uniqueness
-                                         [:password [:varchar 16] :null false]])]])
+                                         [:login [:varchar 128] :unique true :null false]
+                                         [:password [:varchar 128] :null false]])
+                       (ch/create-index :users [:login])]])
 
 (defchangelog changelog "hyperspace-server" [add-users-table])
