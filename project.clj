@@ -1,6 +1,6 @@
 (defproject hyperspace "1.0.0-SNAPSHOT"
   :description "Simple 2D game written in Clojure."
-  :dependencies [[azql "0.1.0"]
+  :dependencies [[azql "0.2.0"]
                  [clj-liquibase "0.5.2"]
                  [com.h2database/h2 "1.3.173"]
                  [crypto-password "0.1.3"]

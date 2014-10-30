@@ -19,5 +19,4 @@
                           :query-params [login :- String
                                          password :- String]
                           :summary "register user"
-                          (user/create login password)
-                          (ok))))
+                          (ok (user/create login password)))))

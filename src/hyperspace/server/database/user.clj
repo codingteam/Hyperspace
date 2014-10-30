@@ -1,13 +1,9 @@
 (ns hyperspace.server.database.user
   (:require [crypto.password.scrypt :as password])
-  (:use [hyperspace.server.database.datasource :only [datasource]]
-        [azql.core :only [insert! values]]))
+  (:use [azql.core :only [select from insert! values]]
+        [hyperspace.server.database.datasource :only [db-spec]]))
 
 (defn create [login password]
-  '())
-
-;;
-;;
-;;  (insert! datasource :user
-;;           (values [{:login    login
-;;                     :password (password/encrypt password)}]))
+  (insert! db-spec :users
+           (values [{:login    login
+                     :password (password/encrypt password)}])))

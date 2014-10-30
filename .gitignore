@@ -12,4 +12,6 @@
 out
 Hyperspace.iml
 
+.nrepl-port
+
 hyperspace-server.*.db
