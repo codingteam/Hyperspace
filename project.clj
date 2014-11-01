@@ -4,6 +4,7 @@
                  [clj-liquibase "0.5.2"]
                  [com.h2database/h2 "1.3.173"]
                  [crypto-password "0.1.3"]
+                 [crypto-random "1.2.0"]
                  [log4j/log4j "1.2.17"]
                  [metosin/ring-swagger "0.13.0"]
                  [metosin/compojure-api "0.16.0"]
