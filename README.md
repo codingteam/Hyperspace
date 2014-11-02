@@ -18,19 +18,8 @@ All configuration data is stored in the `config.edn` file.
 Use `lein ring server` to run game server.
 
 ### Protocol
-Hyperspace protocol is very simple. All messages are transferred in the JSON format.
-
-1. Client connects to the server.
-2. Server searches for the game for client.
-3. Main game loop:
-* server sends the game state to every client;
-* every client sends their turns to server.
-
-#### Server message format
-TODO.
-
-#### Client message format
-TODO.
+Please check the API documentation in your browser. Visit the URL `http://localhost:3000/index.html` after the server
+was started.
 
 ## Testing
 `lein midje` will run all the tests.
