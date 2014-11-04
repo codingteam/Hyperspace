@@ -16,7 +16,7 @@
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojars.rexim/jinput-platform-natives "2.0.5"]
-                 [org.ru.codingteam/lwjgl-platform-natives "2.9.1"]
+                 [ru.org.codingteam/lwjgl-platform-natives "2.9.1"]
                  [org.lwjgl.lwjgl/lwjgl "2.9.1"]]
   :ring {:handler hyperspace.swagger.server/app}
   :uberjar-name "hyperspace-server.jar"
