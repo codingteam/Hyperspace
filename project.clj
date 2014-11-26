@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.lwjgl.lwjgl/lwjgl "2.9.1"]
                  [ru.org.codingteam/lwjgl-platform-natives "2.9.1"]
-                 [org.clojars.rexim/jinput-platform-natives "2.0.5"]]
+                 [ru.org.codingteam/jinput-platform-natives "2.0.6"]]
   :dev-dependencies [[midje "1.4.0"]
                      [lein-midje "1.0.10"]]
   :main hyperspace.main)
