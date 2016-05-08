@@ -25,7 +25,7 @@ was started.
 
 Execute the tests with `lein`:
 
-    lein test
+    lein midje
 
 ### Logging
 For debugging purposes you might want to enable trace logging. To do that, open file `src/log4j.properties` and replace
