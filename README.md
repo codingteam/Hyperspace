@@ -1,4 +1,4 @@
-Hyperspace
+Hyperspace [![Status Umbra][status-umbra]][andivionian-status-classifier] [![Build Status][travis-build-status]][travis-build]
 ==========
 
 Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clojure.
@@ -30,3 +30,9 @@ Execute the tests with `lein`:
 ### Logging
 For debugging purposes you might want to enable trace logging. To do that, open file `src/log4j.properties` and replace
 `DEBUG` with `TRACE`.
+
+[andivionian-status-classifier]: https://github.com/ForNeVeR/andivionian-status-classifier#status-umbra-
+[travis-build]: https://travis-ci.org/codingteam/Hyperspace
+
+[status-umbra]: https://img.shields.io/badge/status-umbra-red.svg
+[travis-build-status]: https://travis-ci.org/codingteam/Hyperspace.svg?branch=develop
