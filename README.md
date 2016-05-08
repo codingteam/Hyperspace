@@ -22,7 +22,10 @@ Please check the API documentation in your browser. Visit the URL `http://localh
 was started.
 
 ## Testing
-`lein midje` will run all the tests.
+
+Execute the tests with `lein`:
+
+    lein test
 
 ### Logging
 For debugging purposes you might want to enable trace logging. To do that, open file `src/log4j.properties` and replace
