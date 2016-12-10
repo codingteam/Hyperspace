@@ -7,9 +7,12 @@
             [hyperspace.library.world :as world]))
 
 (def player-fixture (world/make-player [10 10]))
+(def player2-fixture (world/make-player [15 15]))
 (def nonexistent-player-fixture (world/make-player [20 20]))
 (def world-fixture (-> (world/create 800 600)
                        (assoc :players [player-fixture])))
+(def two-player-world-fixture (assoc world-fixture
+                                     :players [player-fixture player2-fixture]))
 
 (facts "about kill-player function"
   (kill-player world-fixture player-fixture) => (assoc world-fixture :players [(assoc player-fixture :status :dead)])
@@ -44,6 +47,10 @@
     ))
 
 (facts "about fire function"
-  ;; TODO: test shot to player
+  (let [heading (geometry/heading (:position player-fixture) (:position player2-fixture))
+        result-player2 (assoc player2-fixture :status :dead)
+        result-world (assoc two-player-world-fixture :players [player-fixture result-player2])]
+    (fire two-player-world-fixture player-fixture heading 10)
+      => [result-world (:position player2-fixture)])
   ;; TODO: test shot to planet
   (fire world-fixture player-fixture 0 10) => [world-fixture nil])
