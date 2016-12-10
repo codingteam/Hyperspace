@@ -45,10 +45,11 @@
    player
    heading
    power]
-  (trace "fire" world player heading power)
   (let [players (->> world
                      :players
-                     (remove #(= % player)))]
+                     ; Sometimes game will pass players with wrong states here (dead vs alive), so
+                     ; just compare positions here.
+                     (remove #(= (:position %) (:position player))))]
     (loop [bullet {:position (:position player)
                    :velocity [(* (Math/cos heading) power)
                               (* (Math/sin heading) power)]
