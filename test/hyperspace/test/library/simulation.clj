@@ -1,4 +1,4 @@
-(ns hyperspace.test.library.sumulation
+(ns hyperspace.test.library.simulation
   (:use [hyperspace.library.simulation]
         [hyperspace.test.checkers]
         [midje.sweet])
@@ -51,6 +51,6 @@
         result-player2 (assoc player2-fixture :status :dead)
         result-world (assoc two-player-world-fixture :players [player-fixture result-player2])]
     (fire two-player-world-fixture player-fixture heading 10)
-      => [result-world (:position player2-fixture)])
+      => [result-world player2-fixture])
   ;; TODO: test shot to planet
   (fire world-fixture player-fixture 0 10) => [world-fixture nil])

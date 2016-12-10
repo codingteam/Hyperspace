@@ -60,6 +60,6 @@
             player (circle-X-any-circle bullet players)]
         (cond
           (> counter max-cycle) [world nil]
-          planet [world (:position planet)]
-          player [(kill-player world player) (:position player)]
+          planet [world planet]
+          player [(kill-player world player) player]
           :else (recur bullet (+ counter 1)))))))
