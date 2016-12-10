@@ -63,7 +63,7 @@
         (is (= (:players world1) [player1
                                   (assoc player2
                                     :status :dead)]) "player 2 should be dead")
-        (is (= targets [nil player2]))))))
+        (is (= targets [player2 nil]))))))
 
 (deftest planet-shot-test
   (let [game (game/create 800 600)
@@ -71,6 +71,7 @@
         player1id "player1"
         player2id "player2"
         planet (first (:planets world))
+        single-planet-world (assoc world :planets [planet])
         players (:players world)
         player1 (first players)
         player2 (second players)
@@ -79,13 +80,14 @@
     (game/add-player game player1id)
     (game/add-player game player2id)
     (await game)
-    (let [[world1 targets] (game/process-turn @game [world []] [player1id turn1])]
-      (is (= world1 world) "world should not change")
+    (let [[world1 targets] (game/process-turn @game [single-planet-world []] [player1id turn1])]
+      (is (= world1 single-planet-world) "world should not change")
       (is (= targets [planet])))))
 
 (deftest player-shot-test
   (let [game (game/create 800 600)
-        world (:world @game)
+        world (-> (:world @game)
+                  (assoc :planets []))
         player1id "player1"
         player2id "player2"
         planet (first (:planets world))
