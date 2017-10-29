@@ -18,6 +18,18 @@
   (assoc (world/make-missile position velocity)
     :trace-index trace-index))
 
+(defn add-missile
+  [{missiles :missiles
+    traces   :traces
+    :as world}
+   position velocity]
+  (let [new-missile (make-missile position
+                                  velocity
+                                  (count traces))]
+    (assoc world
+      :missiles (conj missiles new-missile)
+      :traces (conj traces []))))
+
 ;;; World-related stuff:
 
 (defn enrich-world
@@ -56,3 +68,20 @@
           :fragments new-fragments
           :traces new-traces)
         (- delta-time simulation/simulation-step)))))
+
+(defn fire
+  [{[player & _] :players
+    :as world}]
+  (let [{position               :position
+         [_, power :as heading] :heading} player
+        missile-position (-> (polar->cartesian heading)
+                             normalize-vector
+                             (multiply-by-scalar (+ world/player-radius
+                                                    world/missile-radius))
+                             (vector-sum position))
+        missile-velocity (-> (polar->cartesian heading)
+                             normalize-vector
+                             (multiply-by-scalar (* power 100)))]
+    (add-missile world
+                 missile-position
+                 missile-velocity)))
