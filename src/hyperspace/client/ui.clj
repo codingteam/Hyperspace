@@ -153,5 +153,6 @@
 
 (defn start
   [world]
-  (setup-ui world)
-  (ui-loop world))
+  (let [world (enrich-world world)]
+    (setup-ui world)
+    (ui-loop world)))

@@ -4,26 +4,26 @@
   (:use [hyperspace.client particles]
         [hyperspace.library geometry]))
 
-;;; Missles related stuff
+;;; Player-related stuff:
+
+(defn enrich-player
+  "Enrich player with UI-required properties."
+  [player]
+  (assoc player :heading [0 1]))
+
+;;; Missiles-related stuff:
 
 (defn make-missile
   [position velocity trace-index]
   (assoc (world/make-missile position velocity)
     :trace-index trace-index))
 
-(defn add-missile
-  [{missiles :missiles
-    traces   :traces
-    :as world}
-   position velocity]
-  (let [new-missile (make-missile position
-    velocity
-    (count traces))]
-    (assoc world
-      :missiles (conj missiles new-missile)
-      :traces (conj traces []))))
+;;; World-related stuff:
 
-;;; World updating stuff:
+(defn enrich-world
+  "Update player definitions in world (enrich with UI-required properties)."
+  [world]
+  (update-in world [:players] (fn [players] (map enrich-player players))))
 
 (defn update-world
   [{missiles :missiles
@@ -35,17 +35,17 @@
   (if (<= delta-time simulation/simulation-step)
     [world delta-time]
     (let [broken-particles (mapcat #(break-particle % planets)
-      (concat missiles fragments))
+                            (concat missiles fragments))
           ;; FIXME: Duplicate code
           new-missiles (->> missiles
-        (filter #(circle-X-rectangle? % world))
-        (remove #(circle-X-any-circle % planets))
-        (map #(simulation/update-particle % planets simulation/simulation-step)))
+                        (filter #(circle-X-rectangle? % world))
+                        (remove #(circle-X-any-circle % planets))
+                        (map #(simulation/update-particle % planets simulation/simulation-step)))
           new-fragments (->> fragments
-        (concat broken-particles)
-        (filter #(circle-X-rectangle? % world))
-        (remove #(circle-X-any-circle % planets))
-        (map #(simulation/update-particle % planets simulation/simulation-step)))
+                         (concat broken-particles)
+                         (filter #(circle-X-rectangle? % world))
+                         (remove #(circle-X-any-circle % planets))
+                         (map #(simulation/update-particle % planets simulation/simulation-step)))
 
           new-traces  (reduce update-traces traces new-missiles)]
       (recur
