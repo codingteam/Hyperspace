@@ -23,7 +23,9 @@
 (defn enrich-world
   "Update player definitions in world (enrich with UI-required properties)."
   [world]
-  (update-in world [:players] (fn [players] (map enrich-player players))))
+  (update-in world [:players] (fn [players] (->> players
+                                                 (map enrich-player)
+                                                 (into [])))))
 
 (defn update-world
   [{missiles :missiles
