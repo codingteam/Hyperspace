@@ -3,9 +3,6 @@ Hyperspace [![Status Umbra][status-umbra]][andivionian-status-classifier] [![Bui
 
 Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clojure.
 
-## Disclaimer
-The game is under heavy development. Nothing works here. Move away!
-
 ## Game client
 
 To run the standalone game client use one of the following commands:
