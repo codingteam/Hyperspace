@@ -7,7 +7,13 @@ Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clo
 The game is under heavy development. Nothing works here. Move away!
 
 ## Game client
-Use `lein run client` to run the standalone game client.
+
+To run the standalone game client use one of the following commands:
+
+```console
+$ lein run client
+$ lein run
+```
 
 ## Game server
 
