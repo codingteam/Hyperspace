@@ -3,6 +3,8 @@ Hyperspace [![Status Umbra][status-umbra]][andivionian-status-classifier] [![Bui
 
 Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clojure.
 
+![Gameplay Footage][gameplay]
+
 ## Game client
 
 To run the standalone game client use one of the following commands:
@@ -39,3 +41,5 @@ For debugging purposes you might want to enable trace logging. To do that, open 
 
 [status-umbra]: https://img.shields.io/badge/status-umbra-red.svg
 [travis-build-status]: https://travis-ci.org/codingteam/Hyperspace.svg?branch=develop
+
+[gameplay]: docs/footage.gif
