@@ -5,6 +5,11 @@ Hyperspace is a [Slingshot](http://slingshot.wikispot.org/) clone written in Clo
 
 ![Gameplay Footage][gameplay]
 
+## Development requirements
+
+- JDK 8 (not a newer one, yet)
+- Leiningen 2.9.2
+
 ## Game client
 
 To run the standalone game client use one of the following commands:

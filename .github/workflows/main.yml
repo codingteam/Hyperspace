@@ -19,10 +19,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 8
+
       - name: Set up Clojure
         uses: DeLaGuardo/setup-clojure@3.5
         with:
-          lein: latest
+          lein: 2.9.6
 
       - name: Test
         run: lein midje
