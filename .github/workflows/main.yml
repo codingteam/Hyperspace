@@ -1,0 +1,28 @@
+name: Main
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 6'
+
+jobs:
+  main:
+    runs-on: ${{ matrix.image }}
+    strategy:
+      matrix:
+        image: [ macos-10.15, ubuntu-20.04, windows-2019 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Clojure
+        uses: DeLaGuardo/setup-clojure@3.5
+        with:
+          lein: latest
+
+      - name: Test
+        run: lein midje
