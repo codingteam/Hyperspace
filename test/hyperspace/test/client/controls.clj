@@ -1,11 +1,11 @@
 (ns hyperspace.test.client.controls
-  (:use [hyperspace.client.controls]
-        [hyperspace.client.richworld]
-        [hyperspace.test.checkers]
-        [midje.sweet]))
+  (:use [clojure.test]
+        [hyperspace.client.controls]
+        [hyperspace.client.richworld]))
 
-(let [world (enrich-world {:players [{}]})]
-  (facts "about turn-left function"
-         (turn-left world 5) => {:players [{:heading [5 1]}]})
-  (facts "about turn-right function"
-         (turn-right world 5) => {:players [{:heading [-5 1]}]}))
+(deftest controls-test
+  (let [world (enrich-world {:players [{}]})]
+    (testing "turn-left function"
+      (is (= (turn-left world 5) {:players [{:heading [5 1]}]})))
+    (testing "turn-right function"
+      (is (= (turn-right world 5) {:players [{:heading [-5 1]}]})))))
