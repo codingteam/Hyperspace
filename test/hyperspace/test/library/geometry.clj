@@ -42,13 +42,11 @@
   (is-almost= (heading [0 0] [1 0]) 0))
 
 ;; (deftest circle-X-circle?-tests
-;;        (circle-X-circle? {:position [0, 0],     :radius 10}
-;;                          {:position [100, 100], :radius 10})
-;;        => false
-
-;;        (circle-X-circle? {:position [34, 32], :radius 20}
-;;                          {:position []})
-;;        => true
+;;        (is (not (circle-X-circle? {:position [0, 0],     :radius 10}
+;;                                   {:position [100, 100], :radius 10})))
+;;
+;;        (is (circle-X-circle? {:position [34, 32], :radius 20}
+;;                              {:position []}))
 ;;        )
 
 ;; (deftest circle-X-any-circle?-tests
