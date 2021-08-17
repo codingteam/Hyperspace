@@ -31,4 +31,4 @@ jobs:
           lein: 2.9.6
 
       - name: Test
-        run: lein midje
+        run: lein test

@@ -1,10 +1,5 @@
 (ns hyperspace.test.checkers
-  (:use [clojure.test]
-        [midje.sweet]))
-
-(defchecker almost= [expected]
-  (chatty-checker [actual]
-    (< (Math/abs (- expected actual)) 1e-6)))
+  (:use [clojure.test]))
 
 (defn is-almost= [x y]
   (if (vector? x)
