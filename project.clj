@@ -10,7 +10,7 @@
                  [metosin/compojure-api "0.16.0"]
                  [metosin/ring-http-response "0.5.0"]
                  [metosin/ring-swagger-ui "2.0.17"]
-                 [org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojure "1.10.3"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.3"]
