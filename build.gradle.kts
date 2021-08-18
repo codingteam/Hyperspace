@@ -4,8 +4,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
-version = "1.0.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
     maven {
@@ -15,15 +13,26 @@ repositories {
 }
 
 dependencies {
-    implementation("org.clojure:clojure:1.8.0")
+    implementation("org.clojure:clojure:1.10.0")
     testRuntimeOnly("org.ajoberstar:jovial:0.3.0")
+}
+
+val hyperspaceMainClass = "hyperspace.main"
+version = "1.0.0-SNAPSHOT"
+
+@Suppress("DEPRECATION") // clojurephant still depends on conventions
+val SourceSet.clojure
+    get() = (this as org.gradle.api.internal.HasConvention).convention.getPlugin<dev.clojurephant.plugin.clojure.tasks.ClojureSourceSet>().clojure
+
+sourceSets {
+    main {
+        clojure.srcDir("src")
+    }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-val hyperspaceMainClass = "hyperspace.main"
 
 application {
     mainClass.set(hyperspaceMainClass)
