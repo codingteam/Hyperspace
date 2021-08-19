@@ -2,6 +2,7 @@
   :description "Simple 2D game written in Clojure."
   :dependencies [[azql "0.2.0"]
                  [clj-liquibase "0.5.2"]
+                 [clj-tuple "0.2.2"]
                  [com.h2database/h2 "1.3.173"]
                  [crypto-password "0.1.3"]
                  [crypto-random "1.2.0"]
@@ -10,6 +11,7 @@
                  [metosin/compojure-api "0.16.0"]
                  [metosin/ring-http-response "0.5.0"]
                  [metosin/ring-swagger-ui "2.0.17"]
+                 [org.flatland/ordered "1.5.7"]
                  [org.clojure/clojure "1.10.3"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.clojure/data.json "0.2.2"]
@@ -22,5 +24,5 @@
   :profiles {:uberjar {:resource-paths ["swagger-ui"]
                        :aot :all}
              :dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
-                   :plugins [[lein-ring "0.8.11"]]}}
+                   :plugins [[lein-ring "0.12.5"]]}}
   :main hyperspace.main)
