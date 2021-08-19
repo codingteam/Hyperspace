@@ -19,6 +19,12 @@ $ lein run client
 $ lein run
 ```
 
+Alternatively:
+
+```console
+$ ./gradlew run client
+```
+
 ## Game server
 
 ### Configuring

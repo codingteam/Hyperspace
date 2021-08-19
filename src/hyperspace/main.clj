@@ -1,6 +1,7 @@
 (ns hyperspace.main
   (:require [hyperspace.client.main :as client]
-            [hyperspace.server.server :as server]))
+            [hyperspace.server.server :as server])
+  (:gen-class))
 
 (defn -main [& args]
   (let [[application & app-args] args]

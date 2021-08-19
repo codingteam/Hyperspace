@@ -1,9 +1,14 @@
+import com.stehno.gradle.natives.ext.Platform
+import dev.clojurephant.plugin.clojure.tasks.ClojureSourceSet
+
 plugins {
     application
     id("dev.clojurephant.clojure") version "0.6.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.stehno.natives") version "0.3.1"
 }
 
+// Dependencies
 repositories {
     mavenCentral()
     maven {
@@ -31,17 +36,21 @@ dependencies {
     implementation("org.clojure:tools.logging:0.2.3")
     implementation("org.flatland:ordered:1.5.7")
     implementation("org.lwjgl.lwjgl:lwjgl:2.9.1")
-    implementation("ru.org.codingteam:jinput-platform-natives:2.0.6")
-    implementation("ru.org.codingteam:lwjgl-platform-natives:2.9.1")
     testRuntimeOnly("org.ajoberstar:jovial:0.3.0")
 }
 
+natives {
+    configurations = listOf("runtimeClasspath")
+    platforms = listOf(Platform.current())
+}
+
+// Compilation
 val hyperspaceMainClass = "hyperspace.main"
 version = "1.0.0-SNAPSHOT"
 
 @Suppress("DEPRECATION") // clojurephant still depends on conventions
-val SourceSet.clojure
-    get() = (this as org.gradle.api.internal.HasConvention).convention.getPlugin<dev.clojurephant.plugin.clojure.tasks.ClojureSourceSet>().clojure
+val SourceSet.clojure: SourceDirectorySet
+    get() = (this as org.gradle.api.internal.HasConvention).convention.getPlugin<ClojureSourceSet>().clojure
 
 sourceSets {
     main {
@@ -49,14 +58,21 @@ sourceSets {
     }
 }
 
+clojure.builds.named("main") {
+    aotAll()
+}
+
+// Testing
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+// Running
 application {
     mainClass.set(hyperspaceMainClass)
 }
 
-clojure.builds.named("main") {
-    aotAll()
+tasks.named<JavaExec>("run") {
+    dependsOn("includeNatives")
+    systemProperties = mapOf("java.library.path" to "build/natives")
 }
