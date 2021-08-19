@@ -56,6 +56,9 @@ sourceSets {
     main {
         clojure.srcDir("src")
     }
+    test {
+        clojure.srcDir("test")
+    }
 }
 
 clojure.builds.named("main") {
