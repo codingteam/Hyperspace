@@ -1,8 +1,7 @@
 (ns hyperspace.main
   (:require [hyperspace.client.main :as client]
             [hyperspace.server.server :as server]
-            [hyperspace.swagger.server :as swagger]
-            [ring.adapter.jetty :as jetty])
+            [hyperspace.swagger.server :as swagger])
   (:gen-class))
 
 (defn -main [& args]
