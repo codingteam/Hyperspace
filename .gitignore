@@ -1,18 +1,5 @@
 /.gradle/
+/.idea/
 /build/
-/pom.xml
-/lib
-/classes
-/native
-/.lein-failures
-/checkouts
-/.lein-deps-sum
-/target
-
-.idea
-out
-Hyperspace.iml
-
-.nrepl-port
 
 hyperspace-server.*.db

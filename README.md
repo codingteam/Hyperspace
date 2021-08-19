@@ -15,14 +15,8 @@ Hyperspace is a [Slingshot][slingshot] clone written in Clojure.
 To run the standalone game client use one of the following commands:
 
 ```console
-$ lein run client
-$ lein run
-```
-
-Alternatively:
-
-```console
 $ ./gradlew run client
+$ ./gradlew run
 ```
 
 ## Game server
@@ -31,9 +25,8 @@ $ ./gradlew run client
 All configuration data is stored in the `config.edn` file.
 
 ### Running
-Use `lein ring server` to run game server.
 
-Alternatively:
+To start the game server web interface, run the following command in your shell:
 
 ```console
 $ ./gradlew run swagger
@@ -45,11 +38,7 @@ was started.
 
 ## Testing
 
-Execute the tests with `lein`:
-
-    lein test
-
-Alternatively:
+To execute the test suite, run the following command in your shell:
 
 ```console
 $ ./gradlew test
