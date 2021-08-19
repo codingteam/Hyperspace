@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation("azql:azql:0.2.0")
     implementation("clj-liquibase:clj-liquibase:0.5.2")
+    implementation("clj-tuple:clj-tuple:0.2.2")
     implementation("com.h2database:h2:1.3.173")
     implementation("crypto-password:crypto-password:0.1.3")
     implementation("crypto-random:crypto-random:1.2.0")
@@ -28,6 +29,7 @@ dependencies {
     implementation("org.clojure:data.json:0.2.2")
     implementation("org.clojure:tools.logging:0.2.3")
     implementation("org.clojure:tools.logging:0.2.3")
+    implementation("org.flatland:ordered:1.5.7")
     implementation("org.lwjgl.lwjgl:lwjgl:2.9.1")
     implementation("ru.org.codingteam:jinput-platform-natives:2.0.6")
     implementation("ru.org.codingteam:lwjgl-platform-natives:2.9.1")
