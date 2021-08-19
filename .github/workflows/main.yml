@@ -25,10 +25,20 @@ jobs:
           distribution: adopt
           java-version: 8
 
-      - name: Set up Clojure
-        uses: DeLaGuardo/setup-clojure@3.5
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
         with:
-          lein: 2.9.6
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      - name: Test
-        run: lein test
+      - name: Build
+        run: ./gradlew build
+
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}.test-reports
+          path: build/reports/tests
