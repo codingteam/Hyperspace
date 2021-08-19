@@ -33,6 +33,12 @@ All configuration data is stored in the `config.edn` file.
 ### Running
 Use `lein ring server` to run game server.
 
+Alternatively:
+
+```console
+$ ./gradlew run swagger
+```
+
 ### Protocol
 Please check the API documentation in your browser. Visit the URL `http://localhost:3000/index.html` after the server
 was started.

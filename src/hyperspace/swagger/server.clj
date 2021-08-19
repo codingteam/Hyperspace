@@ -1,5 +1,6 @@
 (ns hyperspace.swagger.server
   (:require [compojure.api.sweet :refer :all]
+            [ring.adapter.jetty :as jetty]
             [ring.util.http-response :refer :all]
             [schema.core :as s]
             [hyperspace.server.database.user :as user]))
@@ -29,3 +30,6 @@
                             (if session
                               (ok session)
                               (forbidden "invalid username or password"))))))
+
+(defn start []
+  (jetty/run-jetty app {:port 3030}))
