@@ -29,26 +29,7 @@ Then open a file `web/frontend/build/www/index.html` using a web browser.
 
 ## Game server
 
-### Configuring
-All configuration data is stored in the `config.edn` file.
-
-### Running
-
-To start the game server web interface, run the following shell command:
-
-```console
-$ ./gradlew web:run
-```
-
-To start the socket server (deprecated), run the following shell command:
-
-```console
-$ ./gradlew server:run --args <PORT>
-```
-
-### Protocol
-Please check the API documentation in your browser. Visit the URL http://localhost:3030/ after the server
-was started.
+The game server will use a protocol based on web sockets. It is currently at the early development stage.
 
 ## Testing
 
