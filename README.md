@@ -11,7 +11,7 @@ Hyperspace is a [Slingshot][slingshot] clone written in Clojure.
 
 ## Desktop client
 
-To run the standalone game client use the following command:
+To run the standalone game client, use the following shell command:
 
 ```console
 $ ./gradlew client:run
@@ -19,7 +19,7 @@ $ ./gradlew client:run
 
 ## Web client
 
-To run the web version of the game, use the following commands:
+To run the web version of the game, use the following shell command:
 
 ```console
 $ ./gradlew web:frontend:build
