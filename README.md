@@ -34,10 +34,10 @@ All configuration data is stored in the `config.edn` file.
 
 ### Running
 
-To start the game server web interface, run the following command in your shell:
+To start the game server web interface, run the following shell command:
 
 ```console
-$ ./gradlew run --args swagger
+$ ./gradlew web:run
 ```
 
 To start the socket server (deprecated), run the following shell command:
