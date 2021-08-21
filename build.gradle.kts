@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project("core"))
     implementation("azql:azql:0.2.0")
     implementation("clj-liquibase:clj-liquibase:0.5.2")
     implementation("clj-tuple:clj-tuple:0.2.2")
@@ -36,7 +37,6 @@ dependencies {
     implementation("org.clojure:clojure:1.10.3")
     implementation("org.clojure:clojurescript:1.10.773")
     implementation("org.clojure:data.json:0.2.2")
-    implementation("org.clojure:tools.logging:0.2.3")
     implementation("org.clojure:tools.logging:0.2.3")
     implementation("org.flatland:ordered:1.5.7")
     implementation("org.lwjgl.lwjgl:lwjgl:2.9.1")

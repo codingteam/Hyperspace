@@ -3,8 +3,7 @@
                     InputStreamReader
                     PrintWriter])
   (:use [clojure.test]
-        [hyperspace.client.network]
-        [hyperspace.test.checkers])
+        [hyperspace.client.network])
   (:require [clojure.contrib.server-socket :as socket]
             [clojure.data.json :as json]
             [clojure.java.io :as io]))

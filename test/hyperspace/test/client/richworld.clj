@@ -1,7 +1,6 @@
 (ns hyperspace.test.client.richworld
   (:use [clojure.test]
-        [hyperspace.client.richworld]
-        [hyperspace.test.checkers]))
+        [hyperspace.client.richworld]))
 
 (deftest make-missile-test
   (is (= (:trace-index (make-missile [10 20] [30 40] 888)) 888)))
