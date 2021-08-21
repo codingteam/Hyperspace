@@ -1,6 +1,3 @@
-import dev.clojurephant.plugin.clojurescript.tasks.ClojureScriptSourceSet
-import org.gradle.api.internal.HasConvention // clojurephant still depends on conventions
-
 plugins {
     application
     id("dev.clojurephant.clojurescript")
@@ -19,11 +16,6 @@ dependencies {
     implementation("org.clojure:clojure:1.10.3")
     implementation("org.clojure:clojurescript:1.10.773")
 }
-
-// Compilation
-@Suppress("DEPRECATION") // clojurephant still depends on conventions
-val SourceSet.clojurescript: SourceDirectorySet
-    get() = (this as HasConvention).convention.getPlugin<ClojureScriptSourceSet>().clojureScript
 
 tasks.register<Copy>("copyHtml") {
     from("src/main/html")

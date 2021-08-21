@@ -1,6 +1,4 @@
 import com.stehno.gradle.natives.ext.Platform
-import dev.clojurephant.plugin.clojure.tasks.ClojureSourceSet
-import org.gradle.api.internal.HasConvention // clojurephant still depends on conventions
 
 plugins {
     application
@@ -37,10 +35,6 @@ natives {
 // Compilation
 val clientMainClass = "hyperspace.client.main"
 version = "1.0.0-SNAPSHOT"
-
-@Suppress("DEPRECATION") // clojurephant still depends on conventions
-val SourceSet.clojure: SourceDirectorySet
-    get() = (this as HasConvention).convention.getPlugin<ClojureSourceSet>().clojure
 
 clojure.builds.named("main") {
     aotAll()
