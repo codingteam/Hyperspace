@@ -13,12 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation("azql:azql:0.2.0")
-    implementation("clj-liquibase:clj-liquibase:0.5.2")
     implementation("clj-tuple:clj-tuple:0.2.2")
-    implementation("com.h2database:h2:1.3.173")
-    implementation("crypto-password:crypto-password:0.1.3")
-    implementation("crypto-random:crypto-random:1.2.0")
     implementation("log4j:log4j:1.2.17")
     implementation("org.clojure:clojure-contrib:1.2.0")
     implementation("org.clojure:clojure:1.10.3")

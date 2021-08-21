@@ -2,5 +2,3 @@ build/
 
 /.gradle/
 /.idea/
-
-hyperspace-server.*.db
