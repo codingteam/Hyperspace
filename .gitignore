@@ -1,15 +1,5 @@
-/pom.xml
-*jar
-/lib
-/classes
-/native
-/.lein-failures
-/checkouts
-/.lein-deps-sum
-/.lein-plugins
-/.lein-cljsbuild-compiler-*
-/resources/public/js/main.js
+/.gradle/
+/.idea/
+/build/
 
-.idea
-out
-Hyperspace.iml
+hyperspace-server.*.db

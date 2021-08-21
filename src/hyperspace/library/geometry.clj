@@ -1,9 +1,10 @@
-(ns hyperspace.geometry)
+(ns hyperspace.library.geometry
+  (:use clojure.tools.logging))
 
-(def
-  ^{:arglists '([vtr & vtrs])
-    :doc "Returns the sum of vectors."}
-  vector-sum (partial mapv +))
+(defn vector-sum
+  "Returns the sum of vectors."
+  [& vectors]
+  (apply (partial mapv +) vectors))
 
 (def
   ^{:arglists '([vtr & vtrs])
@@ -46,6 +47,11 @@
   [p1 p2]
   (vector-length (vector-subtract p1 p2)))
 
+(defn heading
+  "Returns the heading from point1 to point2 in radians."
+  [point1 point2]
+  (Math/atan2 (- (second point2) (second point1)) (- (first point2) (first point1))))
+
 (defn circle-X-circle?
   "Does the first circle intersects the second one?"
   [{position1 :position radius1 :radius}
@@ -53,10 +59,11 @@
   (<= (distance position1 position2)
       (+ radius1 radius2)))
 
-(defn circle-X-any-circle?
-  "Does the circle intersects any other circles?"
+(defn circle-X-any-circle
+  "Returns the first circle the specified circle intersects with."
   [circle other-circles]
-  (some #(circle-X-circle? % circle) other-circles))
+  (trace "circle-X-any-circle" circle other-circles)
+  (some (fn [c] (if (circle-X-circle? c circle) c nil)) other-circles))
 
 (defn circle-X-rectangle?
   "Does the circle intersects the rectangle?"

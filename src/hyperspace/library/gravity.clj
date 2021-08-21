@@ -1,5 +1,5 @@
-(ns hyperspace.gravity
-  (:use [hyperspace geometry]))
+(ns hyperspace.library.gravity
+  (:use [hyperspace.library geometry]))
 
 (def gravity-constant 0.1)
 

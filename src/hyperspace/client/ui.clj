@@ -1,8 +1,11 @@
-(ns hyperspace.ui
+(ns hyperspace.client.ui
   (:import [org.lwjgl Sys]
            [org.lwjgl.opengl Display DisplayMode GL11]
            [org.lwjgl.input Mouse Keyboard])
-  (:use [hyperspace world geometry game]))
+  (:use [hyperspace.library geometry]
+        [hyperspace.client controls])
+  (:require [hyperspace.client.richworld :as richworld]
+            [hyperspace.library.world :as world]))
 
 (def window-width 800)
 (def window-height 600)
@@ -45,7 +48,7 @@
 
         (and (= key Keyboard/KEY_SPACE)
              (not (Keyboard/isRepeatEvent)))
-        (fire world)
+        (richworld/fire world)
 
         :else world))
     world))
@@ -142,14 +145,15 @@
 
       (let [new-timestamp (get-time)
             delta-time    (+ (- new-timestamp initial-timestamp) accumulated-time)
-            [new-world remaining-time] (update-world world delta-time)
+            [new-world remaining-time] (richworld/update-world world delta-time)
             final-world (-> new-world process-input
                                       render-world)]
         (Display/update)
         (Display/sync fps)
         (recur new-timestamp remaining-time final-world)))))
 
-(defn start-ui
+(defn start
   [world]
-  (setup-ui world)
-  (ui-loop world))
+  (let [world (richworld/enrich-world world)]
+    (setup-ui world)
+    (ui-loop world)))
