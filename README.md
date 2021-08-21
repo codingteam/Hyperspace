@@ -40,6 +40,12 @@ To start the game server web interface, run the following command in your shell:
 $ ./gradlew run --args swagger
 ```
 
+To start the socket server (deprecated), run the following shell command:
+
+```console
+$ ./gradlew server:run --args <PORT>
+```
+
 ### Protocol
 Please check the API documentation in your browser. Visit the URL http://localhost:3030/ after the server
 was started.
