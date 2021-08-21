@@ -23,10 +23,10 @@ $ ./gradlew run
 To run the web version of the game, use the following commands:
 
 ```console
-$ ./gradlew compileClojurescript
+$ ./gradlew web:frontend:build
 ```
 
-Then open a file `public/index.html` using a web browser.
+Then open a file `web/frontend/build/www/index.html` using a web browser.
 
 ## Game server
 
