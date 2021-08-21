@@ -1,2 +1,2 @@
 rootProject.name = "hyperspace"
-include("core", "web:frontend")
+include("client", "core", "web:frontend")
