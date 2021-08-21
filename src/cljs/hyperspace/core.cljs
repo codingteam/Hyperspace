@@ -30,7 +30,7 @@
       (reset! timestamp-atom        new-timestamp)
       (reset! accumulated-time-atom remaining-time)
       (reset! world-atom            final-world))
-    (js/requestAnimFrame render canvas)))
+    (js/requestAnimationFrame render canvas)))
     (render))
 
 ;; Run main function:
