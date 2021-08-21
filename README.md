@@ -38,11 +38,11 @@ All configuration data is stored in the `config.edn` file.
 To start the game server web interface, run the following command in your shell:
 
 ```console
-$ ./gradlew run swagger
+$ ./gradlew run --args swagger
 ```
 
 ### Protocol
-Please check the API documentation in your browser. Visit the URL `http://localhost:3000/index.html` after the server
+Please check the API documentation in your browser. Visit the URL http://localhost:3030/ after the server
 was started.
 
 ## Testing
