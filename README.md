@@ -1,7 +1,7 @@
 Hyperspace [![Status Umbra][status-umbra]][andivionian-status-classifier]
 ==========
 
-Hyperspace is a [Slingshot][slingshot] clone written in Clojure.
+Hyperspace is a [Slingshot][slingshot] clone written in Clojure and Kotlin.
 
 ![Gameplay Footage][gameplay]
 
@@ -29,7 +29,11 @@ Then open a file `web/frontend/build/www/index.html` using a web browser.
 
 ## Game server
 
-The game server will use a protocol based on web sockets. It is currently at the early development stage.
+To run the game server, use the following shell command:
+
+```console
+$ ./gradlew web:run
+```
 
 ## Testing
 
