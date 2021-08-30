@@ -7,7 +7,7 @@ Hyperspace is a [Slingshot][slingshot] clone written in Clojure and Kotlin.
 
 ## Development requirements
 
-- JDK 8 (not a newer one, yet)
+- JDK 16
 
 ## Desktop client
 
