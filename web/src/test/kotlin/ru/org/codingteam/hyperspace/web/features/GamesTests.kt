@@ -23,11 +23,25 @@ class GamesTests {
         return jsonSerializer.readValue(text, T::class.java)
     }
 
-    private fun TestApplicationEngine.sendRequest(url: String, handler: TestApplicationCall.() -> Unit) {
-        handleRequest(HttpMethod.Get, url) {
-            addHeader(HttpHeaders.Accept, ContentType.Application.Json.toString())
+    private fun <T> TestApplicationEngine.sendRequest(
+        url: String,
+        method: HttpMethod = HttpMethod.Get,
+        body: T? = null,
+        handler: TestApplicationCall.() -> Unit = {}
+    ) {
+        handleRequest(method, url) {
+            val jsonContentType = ContentType.Application.Json.toString()
+            addHeader(HttpHeaders.ContentType, jsonContentType)
+            addHeader(HttpHeaders.Accept, jsonContentType)
+            body?.let { setBody(jsonSerializer.writeValueAsString(body)) }
         }.apply(handler)
     }
+
+    private fun TestApplicationEngine.sendRequest(
+        url: String,
+        method: HttpMethod = HttpMethod.Get,
+        handler: TestApplicationCall.() -> Unit
+    ) = sendRequest(url, method, null, handler)
 
     @Test
     fun testGameList() {
@@ -45,10 +59,35 @@ class GamesTests {
     @Test
     fun testGameNotFound() {
         withTestApplication {
-            handleRequest(HttpMethod.Get, "/api/game/123") {
-                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.contentType)
-            }.apply {
+            sendRequest("/api/game/123") {
                 assertEquals(HttpStatusCode.NotFound, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun newGameShouldBeAdded() {
+        withTestApplication {
+            val game = GameDefinition(480, 640)
+            sendRequest("/api/game/", HttpMethod.Post, game) {
+                val id = receive<Int>()
+                sendRequest("/api/game/$id") {
+                    val createdGame = receive<GameDefinition>()
+                    assertEquals(game, createdGame)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun newGameIdShouldBeGenerated() {
+        withTestApplication {
+            val game = GameDefinition(480, 640)
+            sendRequest("/api/game/", HttpMethod.Post, game) {
+                assertEquals(1, receive())
+            }
+            sendRequest("/api/game/", HttpMethod.Post, game) {
+                assertEquals(2, receive())
             }
         }
     }

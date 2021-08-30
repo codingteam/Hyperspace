@@ -2,6 +2,7 @@ package ru.org.codingteam.hyperspace.web.features
 
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.sync.Mutex
@@ -12,6 +13,8 @@ data class GameDefinition(val width: Int, val height: Int)
 fun Application.configureGameApi() {
     val mutex = Mutex()
     val storage = mutableMapOf<Int, GameDefinition>()
+    var lastId = 0
+
     routing {
         route("/api/game") {
             get("/") {
@@ -29,6 +32,15 @@ fun Application.configureGameApi() {
                 )
 
                 call.respond(game)
+            }
+            post("/") {
+                val newGame = call.receive<GameDefinition>()
+                val id = mutex.withLock {
+                    val nextId = ++lastId
+                    storage[nextId] = newGame
+                    nextId
+                }
+                call.respond(id)
             }
         }
     }
