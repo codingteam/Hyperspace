@@ -12,7 +12,6 @@ dependencies {
     implementation("io.ktor:ktor-jackson:1.6.2")
     implementation("io.ktor:ktor-server-core:1.6.2")
     implementation("io.ktor:ktor-server-netty:1.6.2")
-    implementation("io.ktor:ktor-websockets:1.6.2")
     testImplementation("io.ktor:ktor-server-tests:1.6.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.21")
 }
