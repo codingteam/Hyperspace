@@ -3,6 +3,9 @@ package ru.org.codingteam.hyperspace.web.features
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
+import ru.org.codingteam.hyperspace.server.DataStorage
+import ru.org.codingteam.hyperspace.server.FieldSize
+import ru.org.codingteam.hyperspace.server.Game
 import ru.org.codingteam.hyperspace.web.configureLogging
 import ru.org.codingteam.hyperspace.web.configureSerialization
 import ru.org.codingteam.hyperspace.web.jsonSerializer
@@ -10,11 +13,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class GamesTests {
+    private val storage = DataStorage()
     private fun withTestApplication(test: TestApplicationEngine.() -> Unit) {
         withTestApplication({
             configureLogging()
             configureSerialization()
-            configureGameApi()
+            configureGameApi(storage)
         }, test)
     }
 
@@ -47,10 +51,10 @@ class GamesTests {
     fun testGameList() {
         withTestApplication {
             sendRequest("/api/game/") {
-                receive<List<GameDefinition>>()
+                receive<List<Game>>()
                 assertEquals(HttpStatusCode.OK, response.status())
                 response.content
-                val list = runBlocking { receive<List<GameDefinition>>() }
+                val list = runBlocking { receive<List<Game>>() }
                 assertEquals(list, emptyList())
             }
         }
@@ -68,12 +72,12 @@ class GamesTests {
     @Test
     fun newGameShouldBeAdded() {
         withTestApplication {
-            val game = GameDefinition(480, 640)
-            sendRequest("/api/game/", HttpMethod.Post, game) {
+            val size = FieldSize(480, 640)
+            sendRequest("/api/game/", HttpMethod.Post, size) {
                 val id = receive<Int>()
                 sendRequest("/api/game/$id") {
-                    val createdGame = receive<GameDefinition>()
-                    assertEquals(game, createdGame)
+                    val createdGame = receive<Game>()
+                    assertEquals(size, createdGame.size)
                 }
             }
         }
@@ -82,11 +86,11 @@ class GamesTests {
     @Test
     fun newGameIdShouldBeGenerated() {
         withTestApplication {
-            val game = GameDefinition(480, 640)
-            sendRequest("/api/game/", HttpMethod.Post, game) {
+            val size = FieldSize(480, 640)
+            sendRequest("/api/game/", HttpMethod.Post, size) {
                 assertEquals(1, receive())
             }
-            sendRequest("/api/game/", HttpMethod.Post, game) {
+            sendRequest("/api/game/", HttpMethod.Post, size) {
                 assertEquals(2, receive())
             }
         }

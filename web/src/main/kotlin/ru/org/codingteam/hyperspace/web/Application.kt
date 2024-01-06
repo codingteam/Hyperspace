@@ -8,6 +8,7 @@ import io.ktor.http.*
 import io.ktor.jackson.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import ru.org.codingteam.hyperspace.server.DataStorage
 import ru.org.codingteam.hyperspace.web.features.configureGameApi
 
 fun Application.configureLogging() {
@@ -25,9 +26,10 @@ fun Application.configureSerialization() {
 }
 
 fun main() {
+    val storage = DataStorage()
     embeddedServer(Netty, port = 8080, host = "localhost") {
         configureLogging()
         configureSerialization()
-        configureGameApi()
+        configureGameApi(storage)
     }.start(wait = true)
 }
