@@ -13,16 +13,6 @@ To run the standalone game client, use the following shell command:
 $ ./gradlew client:run
 ```
 
-## Web client
-
-To run the web version of the game, use the following shell command:
-
-```console
-$ ./gradlew web:frontend:build
-```
-
-Then open a file `web/frontend/build/www/index.html` using a web browser.
-
 ## Game server
 
 To run the game server, use the following shell command:
