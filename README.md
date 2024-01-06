@@ -27,7 +27,7 @@ For now, only run from sources is supported. See the [Contributor Guide][docs.co
 Documentation
 -------------
 - [Contributor Guide][docs.contributing]
-- [License (MIT]][docs.license]
+- [License (MIT)][docs.license]
 
 [andivionian-status-classifier]: https://github.com/ForNeVeR/andivionian-status-classifier#status-umbra-
 [docs.contributing]: CONTRIBUTING.md
